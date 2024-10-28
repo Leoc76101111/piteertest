@@ -175,6 +175,8 @@ function town_salvage_task.handle_teleporting()
     end
 end
 
+local last_alternate_position_time = 0
+
 function town_salvage_task.move_to_blacksmith()
     tracker:set_boss_task_running(false)
     console.print("Moving to blacksmith")
@@ -191,25 +193,37 @@ function town_salvage_task.move_to_blacksmith()
             town_salvage_task.current_state = salvage_state.INTERACTING_WITH_BLACKSMITH
         end
     else
-        console.print("No blacksmith found, trying alternative positions...")
-        local alternative_positions = {
-            enums.positions.blacksmith_position,
-            vec3:new(-1672.0946044922, -597.67523193359, 36.9287109375),  -- Add more alternative positions here
-            vec3:new(-1672.1946044922, -597.57523193359, 36.8287109375),
-        }
-        
-        for _, pos in ipairs(alternative_positions) do
-            explorerlite:set_custom_target(pos)
-            explorerlite:move_to_target()
-            if utils.distance_to(pos) < 5 then
-                console.print("Reached alternative position near blacksmith")
-                town_salvage_task.current_state = salvage_state.INTERACTING_WITH_BLACKSMITH
-                return
+        local current_time = get_time_since_inject()
+        if current_time - last_alternate_position_time >= 3 then
+            console.print("No blacksmith found, trying alternative positions...")
+            local alternative_positions = {
+                enums.positions.blacksmith_position,
+                vec3:new(-1672.0946044922, -597.67523193359, 36.9287109375),
+                vec3:new(-1672.1946044922, -597.57523193359, 36.8287109375),
+                vec3:new(-1683.3564453125, -596.90936279297, 36.919921875),
+            }
+            
+            for _, pos in ipairs(alternative_positions) do
+                explorerlite:set_custom_target(pos)
+                last_alternate_position_time = current_time
             end
+            
+            console.print("Failed to reach blacksmith or alternative positions")
+            town_salvage_task.current_retries = town_salvage_task.current_retries + 1
+        else
+            console.print("Waiting before trying alternate positions...")
         end
         
-        console.print("Failed to reach blacksmith or alternative positions")
-        town_salvage_task.current_retries = town_salvage_task.current_retries + 1
+        -- Always try to move to the current target, regardless of cooldown
+        explorerlite:move_to_target()
+        
+        -- Check if we've reached the current target
+        local current_target = explorerlite:get_current_target()
+        if current_target and utils.distance_to(current_target) < 1 then
+            console.print("Reached alternative position near blacksmith")
+            town_salvage_task.current_state = salvage_state.INTERACTING_WITH_BLACKSMITH
+            return
+        end
     end
 end
 
