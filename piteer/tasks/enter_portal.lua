@@ -32,7 +32,7 @@ local task  = {
                 -- Check if the player is close enough to interact with the portal
                 local distance_to_portal = utils.distance_to(portal)
                 -- console.print("Distance to portal: " .. tostring(distance_to_portal))
-                if distance_to_portal < 2 then
+                if distance_to_portal < 7 then
                     -- console.print("Player is close enough to the portal. Interacting with the portal.")
                     interact_object(portal)
                     explorer.reset_exploration()
