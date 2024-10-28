@@ -717,7 +717,7 @@ local function a_star(start, goal)
 end
 
 local last_a_star_call = 0.0
-local path_recalculation_interval = 3.0 -- Recalculate path every 2 seconds
+local path_recalculation_interval = 0.5 -- Recalculate path every 2 seconds
 local last_path_recalculation = 0.0
 
 -- Update the move_to_target function
@@ -775,7 +775,7 @@ local function move_to_target()
             path_index = path_index + 1
         end
 
-        if calculate_distance(player_pos, target_position) < 2 then
+        if calculate_distance(player_pos, target_position) < 5 then
             console.print("Reached target position")
             mark_area_as_explored(player_pos, exploration_radius)
             if current_circle_target then
