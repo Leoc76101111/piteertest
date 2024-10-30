@@ -83,8 +83,8 @@ local target_position = nil
 local grid_size = gui.elements.explorer_grid_size_slider:get() / 10  -- Updated grid_size calculation
 local exploration_radius = 16   -- Radius in which areas are considered explored
 local explored_buffer = 2      -- Buffer around explored areas in meters
-local max_target_distance = 120 -- Maximum distance for a new target
-local target_distance_states = {120, 40, 20, 5}
+local max_target_distance = 60 -- Maximum distance for a new target
+local target_distance_states = {60, 90, 100, 125}
 local target_distance_index = 1
 local unstuck_target_distance = 15 -- Maximum distance for an unstuck target
 local stuck_threshold = 4      -- Seconds before the character is considered "stuck"
@@ -99,8 +99,8 @@ local explored_circles = {}
 -- Add these new variables at the top of the file
 local last_circle_position = nil
 local last_circle_time = 0
-local min_distance_between_circles = 16  -- Distance in units
-local min_time_between_circles = 5  -- Minimum time in seconds between circle creations
+local min_distance_between_circles = 0.5  -- Distance in units
+local min_time_between_circles = 0.5  -- Minimum time in seconds between circle creations
 
 -- Function to check and print pit start time and time spent in pitre
 local function check_pit_time()
@@ -145,12 +145,26 @@ function explorer:clear_path_and_target()
     path_index = 1
 end
 
-local function calculate_distance(point1, point2)
-    --console.print("Calculating distance between points.")
-    if not point2.x and point2 then
-        return point1:dist_to_ignore_z(point2:get_position())
+-- Replace/update the calculate_distance function
+local function calculate_distance(pos1, pos2)
+    -- Case 1: pos2 is a game object with get_position method
+    if type(pos2.get_position) == "function" then
+        return pos1:dist_to_ignore_z(pos2:get_position())
     end
-    return point1:dist_to_ignore_z(point2)
+    
+    -- Case 2: pos2 is a vector object
+    if type(pos2.x) == "function" then
+        return pos1:dist_to_ignore_z(pos2)
+    end
+    
+    -- Case 3: pos2 is our stored position table
+    if type(pos2.x) == "number" then
+        return pos1:dist_to_ignore_z(vec3:new(pos2.x, pos2.y, pos2.z))
+    end
+    
+    -- If we get here, we don't know how to handle the input
+    console.print("Warning: Unknown position type in calculate_distance")
+    return 0
 end
 
 --ai fix for start location spamming 
@@ -880,6 +894,45 @@ end
 
 local last_call_time = 0.0
 local is_player_in_pit = false
+
+-- Move this function definition up, before on_update
+local function check_and_create_circle()
+    local current_time = get_time_since_inject()
+    local player_pos = get_player_position()
+    
+    console.print(string.format("Current player position: (%.2f, %.2f, %.2f)", 
+        player_pos:x(), player_pos:y(), player_pos:z()))
+    
+    if last_circle_position then
+        console.print(string.format("Last circle position: (%.2f, %.2f, %.2f)", 
+            last_circle_position.x, last_circle_position.y, last_circle_position.z))
+        local distance = calculate_distance(player_pos, last_circle_position)
+        local time_diff = current_time - last_circle_time
+        console.print(string.format("Distance from last circle: %.2f, Time since last circle: %.2f seconds", 
+            distance, time_diff))
+    else
+        console.print("No previous circle created yet")
+    end
+    
+    if not last_circle_position or 
+       (calculate_distance(player_pos, last_circle_position) >= min_distance_between_circles and
+        current_time - last_circle_time >= min_time_between_circles) then
+        
+        console.print("Creating new circle")
+        mark_area_as_explored(player_pos, exploration_radius)
+        console.print(string.format("Total explored circles: %d", #explored_circles))
+        
+        last_circle_position = {
+            x = player_pos:x(), 
+            y = player_pos:y(), 
+            z = player_pos:z()
+        }
+        last_circle_time = current_time
+    else
+        console.print("Not enough distance or time has passed to create a new circle")
+    end
+end
+
 on_update(function()
     if not settings.enabled then
         return
@@ -907,6 +960,8 @@ on_update(function()
 
         --console.print("Calling check_walkable_area")
         check_walkable_area()
+        check_and_create_circle()
+        
         local is_stuck = check_if_stuck()
         if is_stuck then
             --console.print("Character was stuck. Finding new target and attempting revive")
@@ -974,7 +1029,15 @@ end)
 
 -- Add this new function near other helper functions
 local function calculate_distance(pos1, pos2)
-    return math.sqrt((pos1.x - pos2.x)^2 + (pos1.y - pos2.y)^2 + (pos1.z - pos2.z)^2)
+    local x1 = type(pos1.x) == "function" and pos1:x() or pos1.x
+    local y1 = type(pos1.y) == "function" and pos1:y() or pos1.y
+    local z1 = type(pos1.z) == "function" and pos1:z() or pos1.z
+    
+    local x2 = type(pos2.x) == "function" and pos2:x() or pos2.x
+    local y2 = type(pos2.y) == "function" and pos2:y() or pos2.y
+    local z2 = type(pos2.z) == "function" and pos2:z() or pos2.z
+    
+    return math.sqrt((x1 - x2)^2 + (y1 - y2)^2 + (z1 - z2)^2)
 end
 
 -- Update the check_and_create_circle function
@@ -982,13 +1045,16 @@ local function check_and_create_circle()
     local current_time = get_time_since_inject()
     local player_pos = get_player_position()
     
-    console.print(string.format("Current player position: (%.2f, %.2f, %.2f)", player_pos.x, player_pos.y, player_pos.z))
+    console.print(string.format("Current player position: (%.2f, %.2f, %.2f)", 
+        player_pos:x(), player_pos:y(), player_pos:z()))
     
     if last_circle_position then
-        console.print(string.format("Last circle position: (%.2f, %.2f, %.2f)", last_circle_position.x, last_circle_position.y, last_circle_position.z))
+        console.print(string.format("Last circle position: (%.2f, %.2f, %.2f)", 
+            last_circle_position.x, last_circle_position.y, last_circle_position.z))
         local distance = calculate_distance(player_pos, last_circle_position)
         local time_diff = current_time - last_circle_time
-        console.print(string.format("Distance from last circle: %.2f, Time since last circle: %.2f seconds", distance, time_diff))
+        console.print(string.format("Distance from last circle: %.2f, Time since last circle: %.2f seconds", 
+            distance, time_diff))
     else
         console.print("No previous circle created yet")
     end
@@ -1001,7 +1067,11 @@ local function check_and_create_circle()
         mark_area_as_explored(player_pos, exploration_radius)
         console.print(string.format("Total explored circles: %d", #explored_circles))
         
-        last_circle_position = {x = player_pos.x, y = player_pos.y, z = player_pos.z}
+        last_circle_position = {
+            x = player_pos:x(), 
+            y = player_pos:y(), 
+            z = player_pos:z()
+        }
         last_circle_time = current_time
     else
         console.print("Not enough distance or time has passed to create a new circle")

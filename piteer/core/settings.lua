@@ -10,6 +10,7 @@ local settings = {
     explorer_grid_size = 10,
     gamble_category = "Cap",
     greater_affix_threshold = 1,
+    gamble_enabled = false,
 }
 
 function settings:update_settings()
@@ -24,6 +25,7 @@ function settings:update_settings()
     settings.explorer_grid_size = gui.elements.explorer_grid_size_slider:get()
     settings.gamble_category = gui.gamble_categories[gui.elements.gamble_category:get() + 1]
     settings.greater_affix_threshold = gui.elements.greater_affix_slider:get()
+    settings.gamble_enabled = gui.elements.gamble_toggle:get()
 end
 
 return settings

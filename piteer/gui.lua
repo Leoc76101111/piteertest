@@ -1,5 +1,5 @@
 local gui = {}
-local plugin_label = "piteer v3.1"
+local plugin_label = "piteer v3.4a"
 
 local function create_checkbox(key)
     return checkbox:new(false, get_hash(plugin_label .. "_" .. key))
@@ -37,10 +37,11 @@ gui.elements = {
     explorer_grid_size_slider = slider_int:new(10, 20, 15, get_hash("explorer_grid_size_slider")),
     gamble_category = combo_box:new(0, get_hash("piteer_gamble_category")),
     greater_affix_slider = slider_int:new(0, 3, 1, get_hash("greater_affix_slider")),
+    gamble_toggle = create_checkbox("gamble_toggle"),
 }
 
 function gui.render()
-    if not gui.elements.main_tree:push("Piteer V3.2") then return end
+    if not gui.elements.main_tree:push("Piteer V3.4a") then return end
 
     gui.elements.main_toggle:render("Enable", "Enable the bot")
     
@@ -57,6 +58,7 @@ function gui.render()
         gui.elements.explorer_grid_size_slider:render("Explorer Grid Size", "Adjust the grid size for exploration (1.0-2.0)")
         gui.elements.gamble_category:render("Gamble Category", gui.gamble_categories, "Select the item category to gamble")
         gui.elements.greater_affix_slider:render("Greater Affix Threshold", "Set the number of greater affixes to salvage (0-3)")
+        gui.elements.gamble_toggle:render("Enable Gambling", "Toggle gambling on/off")
         gui.elements.settings_tree:pop()
     end
 

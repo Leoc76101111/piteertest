@@ -19,9 +19,14 @@ local is_running = false  -- State variable moved outside the task table
 local task = {
     name = "Obol Vendor",
     shouldExecute = function()
+        if not settings.enabled or not settings.gamble_enabled then
+            return false
+        end
+        
         local player = get_local_player()
         local obols = player:get_obols()
         console.print("Checking shouldExecute: Obols = " .. obols .. ", Is running = " .. tostring(is_running))
+        
         if not is_running then
             local should_start = utils.player_in_zone("Scos_Cerrigar") and obols > 1000
             console.print("Should start task: " .. tostring(should_start))
