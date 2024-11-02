@@ -174,7 +174,7 @@ function explorer:check_start_location_reached()
         if start_location then
             local player_pos = get_player_position()
             local start_pos = start_location:get_position()
-            if calculate_distance(player_pos, start_pos) < 2 then  -- Adjust this distance as needed
+            if calculate_distance(player_pos, start_pos) < 0.1 then  -- Adjust this distance as needed
                 tracker.start_location_reached = true
                 console.print("Start location reached")
             end
@@ -789,7 +789,7 @@ local function move_to_target()
             path_index = path_index + 1
         end
 
-        if calculate_distance(player_pos, target_position) < 5 then
+        if calculate_distance(player_pos, target_position) < 2 then
             console.print("Reached target position")
             mark_area_as_explored(player_pos, exploration_radius)
             if current_circle_target then

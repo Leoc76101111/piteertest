@@ -11,7 +11,7 @@ local task = {
     shouldExecute = function()
         --console.print("Checking if Finish Pit task should execute...")
         return settings.exit_pit_enabled and
-               utils.get_object_by_name(enums.misc.gizmo_paragon_glyph_upgrade) ~= nil
+            utils.get_object_by_name(enums.misc.gizmo_paragon_glyph_upgrade) ~= nil
     end,
     Execute = function()
         console.print("Executing the task: Finish Pit.")
