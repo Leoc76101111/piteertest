@@ -253,4 +253,27 @@ function utils.get_object_by_name(object_name)
     return nil
 end
 
+function utils.get_closest_object_by_name(object_name)
+    local actors = actors_manager:get_all_actors()
+    local closest_object = nil
+    local closest_distance = math.huge
+
+    for _, actor in pairs(actors) do
+        local name = actor:get_skin_name()
+        if name == object_name then
+            local actor_pos = actor:get_position()
+            local distance = utils.distance_to(actor_pos)
+            if distance < closest_distance then
+                closest_object = actor
+                closest_distance = distance
+            end
+        end
+    end
+
+    if closest_object then
+        return closest_object
+    end
+    return nil
+end
+
 return utils
