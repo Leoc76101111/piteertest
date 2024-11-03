@@ -174,7 +174,13 @@ function explorer:check_start_location_reached()
         if start_location then
             local player_pos = get_player_position()
             local start_pos = start_location:get_position()
-            if calculate_distance(player_pos, start_pos) < 0.1 then  -- Adjust this distance as needed
+            local middle_start_pos = vec3:new(
+                start_pos:x() - 10,
+                start_pos:y() - 10 ,
+                start_pos:z()
+            )
+
+            if calculate_distance(player_pos, middle_start_pos) < 0.1 then  -- Adjust this distance as needed
                 tracker.start_location_reached = true
                 console.print("Start location reached")
             end
@@ -192,8 +198,13 @@ function explorer:set_start_location_target()
 
     local start_location = utils.get_start_location_0()
     if start_location then
+        local middle_start_location = vec3:new(
+            start_location:get_position():x() - 10,
+            start_location:get_position():y() - 10 ,
+            start_location:get_position():z()
+        )
         console.print("Setting target to start location: " .. start_location:get_skin_name())
-        self:set_custom_target(start_location)
+        self:set_custom_target(middle_start_location)
         return true
     else
         return false
@@ -737,7 +748,7 @@ local last_path_recalculation = 0.0
 -- Update the move_to_target function
 local function move_to_target()
     --console.print("Moving to target")
-    if tracker:is_boss_task_running() then
+    if tracker:is_boss_task_running() or explorer.is_task_running then
         return  -- Do not set a path if the boss task is running
     end
 
@@ -938,8 +949,8 @@ on_update(function()
         return
     end
 
-    if tracker:is_boss_task_running() then
-        return -- Don't run explorer logic if the boss task is running
+    if tracker:is_boss_task_running() or explorer.current_task == "Stupid Ladder" then
+        return -- Don't run explorer logic if the boss task or stupid ladder is running
     end
 
     local world = world.get_current_world()

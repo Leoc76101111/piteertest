@@ -12,6 +12,7 @@ local last_open  = 0
 local function reset_pit_values()
     tracker.finished_time = 0
     tracker.pit_start_time = 0
+    tracker.traversal_controller_reached = false
     explorerlite.is_task_running = false
     tracker:set_boss_task_running(false)
     -- Reset last_reset in exit_pit.lua
