@@ -59,6 +59,7 @@ local task_files = {
     "finish_pit",  -- Move finish_pit earlier in the list
     --"exit_pit",    -- Place exit_pit immediately after finish_pit
     "explore_pit",
+    "town_stash",
     "town_salvage",
     "town_obol",
     "town_sell",
