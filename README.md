@@ -1,3 +1,12 @@
+**Version 3.5**
+  - Added Stashing of items based on your "Keep Greater Affix Count" slider
+    set your threshold to your desired amount of GA's to keep, and set your keep items to stash and the script will salvage items < the keep greater affix count and it will stash the items that are > or = to your threshold. 
+  - fixed stupid ladder
+    Script will now look for any traversal actor that is within 5 units of the players Z height, and find a walkeable point close to it in order to path to it using explorer and A*, once close it should go down the stupid ladder
+  - tweaked gui to be easier, probably wont help. please instruct others to read the readme / pinned posts / tooltips
+
+
+
 **Version 2.0**
   -added max pit time slider 
   
