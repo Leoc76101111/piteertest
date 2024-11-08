@@ -73,6 +73,12 @@ local enums = require "data.enums"
 local settings = require "core.settings"
 local tracker = require "core.tracker"
 local gui = require "gui"
+
+-- Add this function near the top with other utility functions
+local function get_grid_size()
+    return gui.elements.explorer_grid_size_slider:get() / 10
+end
+
 local explorer = {
     enabled = false,
     is_task_running = false, --added to prevent boss dead pathing 
@@ -80,10 +86,9 @@ local explorer = {
 }
 local explored_areas = {}
 local target_position = nil
-local grid_size = gui.elements.explorer_grid_size_slider:get() / 10  -- Updated grid_size calculation
-local exploration_radius = 16   -- Radius in which areas are considered explored
-local explored_buffer = 2      -- Buffer around explored areas in meters
-local max_target_distance = 60 -- Maximum distance for a new target
+local exploration_radius = 16
+local explored_buffer = 2
+local max_target_distance = 60
 local target_distance_states = {60, 90, 100, 125}
 local target_distance_index = 1
 local unstuck_target_distance = 15 -- Maximum distance for an unstuck target
@@ -188,11 +193,20 @@ function explorer:check_start_location_reached()
     end
 end
 
+-- Add this variable near the top with other state variables
+local last_start_location_check = 0
 
---ai fix for boss room
 function explorer:set_start_location_target()
+    local current_time = get_time_since_inject()
+    
+    -- Only check every 5 seconds
+    if current_time - last_start_location_check < 0.5 then
+        return false
+    end
+    
+    last_start_location_check = current_time
+
     if self.is_task_running or self.current_task == "Kill Monsters" or tracker.start_location_reached then
-        --console.print("Task is running, Kill Monsters task is active, or start location already reached. Skipping set_start_location_target")
         return false
     end
 
@@ -200,7 +214,7 @@ function explorer:set_start_location_target()
     if start_location then
         local middle_start_location = vec3:new(
             start_location:get_position():x() - 10,
-            start_location:get_position():y() - 10 ,
+            start_location:get_position():y() - 10,
             start_location:get_position():z()
         )
         console.print("Setting target to start location: " .. start_location:get_skin_name())
@@ -211,7 +225,6 @@ function explorer:set_start_location_target()
     end
 end
 
-
 --ai fix for stairs
 local function set_height_of_valid_position(point)
     --console.print("Setting height of valid position.")
@@ -219,10 +232,9 @@ local function set_height_of_valid_position(point)
 end
 
 local function get_grid_key(point)
-    --console.print("Getting grid key.")
-    return math.floor(point:x() / grid_size) .. "," ..
-        math.floor(point:y() / grid_size) .. "," ..
-        math.floor(point:z() / grid_size)
+    return math.floor(point:x() / get_grid_size()) .. "," ..
+           math.floor(point:y() / get_grid_size()) .. "," ..
+           math.floor(point:z() / get_grid_size())
 end
 
 -- Update the mark_area_as_explored function
@@ -264,8 +276,8 @@ local function find_nearest_unexplored_point(start_point, max_distance)
     local nearest_point = nil
     local nearest_distance = math.huge
 
-    for x = -check_radius, check_radius, grid_size do
-        for y = -check_radius, check_radius, grid_size do
+    for x = -check_radius, check_radius, get_grid_size() do
+        for y = -check_radius, check_radius, get_grid_size() do
             local point = vec3:new(
                 start_point:x() + x,
                 start_point:y() + y,
@@ -296,9 +308,9 @@ local function check_walkable_area()
     console.print(string.format("Player position: (%.2f, %.2f, %.2f)", player_pos:x(), player_pos:y(), player_pos:z()))
     mark_area_as_explored(player_pos, exploration_radius)
 
-    for x = -check_radius, check_radius, grid_size do
-        for y = -check_radius, check_radius, grid_size do
-            for z = -check_radius, check_radius, grid_size do -- Inclui z no loop
+    for x = -check_radius, check_radius, get_grid_size() do
+        for y = -check_radius, check_radius, get_grid_size() do
+            for z = -check_radius, check_radius, get_grid_size() do -- Inclui z no loop
                 local point = vec3:new(
                     player_pos:x() + x,
                     player_pos:y() + y,
@@ -420,8 +432,8 @@ local function find_central_unexplored_target()
     local unexplored_points = {}
 
     -- Collect unexplored points
-    for x = -check_radius, check_radius, grid_size do
-        for y = -check_radius, check_radius, grid_size do
+    for x = -check_radius, check_radius, get_grid_size() do
+        for y = -check_radius, check_radius, get_grid_size() do
             local point = vec3:new(
                 player_pos:x() + x,
                 player_pos:y() + y,
@@ -490,8 +502,8 @@ local function find_random_explored_target()
     local check_radius = max_target_distance
     local explored_points = {}
 
-    for x = -check_radius, check_radius, grid_size do
-        for y = -check_radius, check_radius, grid_size do
+    for x = -check_radius, check_radius, get_grid_size() do
+        for y = -check_radius, check_radius, get_grid_size() do
             local point = vec3:new(
                 player_pos:x() + x,
                 player_pos:y() + y,
@@ -520,7 +532,7 @@ end
 local function is_in_last_targets(point)
     --console.print("Checking if point is in last targets.")
     for _, target in ipairs(last_explored_targets) do
-        if calculate_distance(point, target) < grid_size * 2 then
+        if calculate_distance(point, target) < get_grid_size() * 2 then
             return true
         end
     end
@@ -540,8 +552,8 @@ local function find_unstuck_target()
     local player_pos = get_player_position()
     local valid_targets = {}
 
-    for x = -unstuck_target_distance, unstuck_target_distance, grid_size do
-        for y = -unstuck_target_distance, unstuck_target_distance, grid_size do
+    for x = -unstuck_target_distance, unstuck_target_distance, get_grid_size() do
+        for y = -unstuck_target_distance, unstuck_target_distance, get_grid_size() do
             local point = vec3:new(
                 player_pos:x() + x,
                 player_pos:y() + y,
@@ -620,8 +632,8 @@ local function get_neighbors(point)
     }
     for _, dir in ipairs(directions) do
         local neighbor = vec3:new(
-            point:x() + dir.x * grid_size,
-            point:y() + dir.y * grid_size,
+            point:x() + dir.x * get_grid_size(),
+            point:y() + dir.y * get_grid_size(),
             point:z()
         )
         neighbor = set_height_of_valid_position(neighbor)
@@ -635,8 +647,8 @@ local function get_neighbors(point)
 
     if #neighbors == 0 and last_movement_direction then
         local back_direction = vec3:new(
-            point:x() - last_movement_direction.x * grid_size,
-            point:y() - last_movement_direction.y * grid_size,
+            point:x() - last_movement_direction.x * get_grid_size(),
+            point:y() - last_movement_direction.y * get_grid_size(),
             point:z()
         )
         back_direction = set_height_of_valid_position(back_direction)
@@ -699,13 +711,13 @@ local function a_star(start, goal)
 
     while not open_set:empty() do
         iterations = iterations + 1
-        if iterations > 6666 then
+        if iterations > 666 then
             --console.print("Max iterations reached, aborting!")
             break
         end
 
         local current = open_set:pop()
-        if calculate_distance(current, goal) < grid_size then
+        if calculate_distance(current, goal) < get_grid_size() then
             max_target_distance = target_distance_states[1]
             target_distance_index = 1
             return reconstruct_path(came_from, current)
@@ -762,17 +774,21 @@ local function move_to_target()
             return
         end
 
-        if not current_path or #current_path == 0 or path_index > #current_path then
+        if not current_path then
+            current_path = {}
+        end
+
+        if #current_path == 0 or path_index > #current_path then
             console.print("Calculating new path to target")
             local current_core_time = get_time_since_inject()
             path_index = 1
-            current_path = nil
             current_path = a_star(player_pos, target_position)
             last_a_star_call = current_core_time
 
             if not current_path then
                 console.print("No path found to target. Finding new target.")
                 target_position = find_target(false)
+                current_path = {}  -- Initialize to empty table instead of nil
                 return
             end
         end
@@ -781,26 +797,31 @@ local function move_to_target()
         if current_time - last_path_recalculation > path_recalculation_interval then
             console.print("Recalculating path")
             local player_pos = get_player_position()
-            current_path = a_star(player_pos, target_position)
-            path_index = 1
+            local new_path = a_star(player_pos, target_position)
+            if new_path then  -- Only update if we got a valid path
+                current_path = new_path
+                path_index = 1
+            end
             last_path_recalculation = current_time
         end
 
-        local next_point = current_path[path_index]
-        if next_point and not next_point:is_zero() then
-            pathfinder.request_move(next_point)
+        if current_path and current_path[path_index] then
+            local next_point = current_path[path_index]
+            if next_point and not next_point:is_zero() then
+                pathfinder.request_move(next_point)
+            end
+
+            if next_point and next_point.x and not next_point:is_zero() and calculate_distance(player_pos, next_point) < get_grid_size() then
+                local direction = {
+                    x = next_point:x() - player_pos:x(),
+                    y = next_point:y() - player_pos:y()
+                }
+                last_movement_direction = direction
+                path_index = path_index + 1
+            end
         end
 
-        if next_point and next_point.x and not next_point:is_zero() and calculate_distance(player_pos, next_point) < grid_size then
-            local direction = {
-                x = next_point:x() - player_pos:x(),
-                y = next_point:y() - player_pos:y()
-            }
-            last_movement_direction = direction
-            path_index = path_index + 1
-        end
-
-        if calculate_distance(player_pos, target_position) < 2 then
+        if calculate_distance(player_pos, target_position) < 3 then
             console.print("Reached target position")
             mark_area_as_explored(player_pos, exploration_radius)
             if current_circle_target then
@@ -1037,7 +1058,6 @@ on_render(function()
 end)
 
 
-
 -- Add this new function near other helper functions
 local function calculate_distance(pos1, pos2)
     local x1 = type(pos1.x) == "function" and pos1:x() or pos1.x
@@ -1097,6 +1117,7 @@ function explorer:update()
     
     -- ... rest of the update logic ...
 end
+
 
 function explorer.clear_explored_circles()
     explored_circles = {}

@@ -276,4 +276,16 @@ function utils.get_closest_object_by_name(object_name)
     return nil
 end
 
+function utils.get_stash()
+    local actors = actors_manager:get_all_actors()
+    for _, actor in pairs(actors) do
+        local name = actor:get_skin_name()
+        -- Check for both possible stash names
+        if name == "Stash" or name == "Personal Stash" then
+            return actor
+        end
+    end
+    return nil
+end
+
 return utils
