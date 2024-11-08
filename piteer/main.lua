@@ -31,6 +31,16 @@ local function render_pulse()
     end
 end
 
+-- Set Global access for other plugins
+PitPlugin = {
+    enable = function ()
+        gui.elements.main_toggle:set(true)
+    end,
+    disable = function ()
+        gui.elements.main_toggle:set(false)
+    end,
+}
+
 on_update(function()
     update_locals()
     main_pulse()
