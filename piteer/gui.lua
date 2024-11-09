@@ -24,9 +24,7 @@ gui.elements = {
     path_settings_tree = tree_node:new(2),
     melee_logic = create_checkbox("melee_logic"),
     elite_only_toggle = create_checkbox("elite_only"),
-    pit_level = input_text:new(get_hash("piteer_pit_level_unique_id")),
     pit_level_slider = slider_int:new(1, 150, 1, 1984),
-    loot_toggle = create_checkbox("loot_toggle"),
     loot_modes = combo_box:new(0, get_hash("piteer_loot_modes")),
     path_angle_slider = slider_int:new(0, 36, 0, get_hash("path_angle_slider")), -- 10 is a default value
     reset_time_slider = slider_int:new(60, 900, 600, get_hash("reset_time_slider")), -- New slider for reset time in seconds
@@ -48,17 +46,9 @@ function gui.render()
         gui.elements.loot_modes:render("Keep Items", gui.loot_modes_options, "Do you want to stash items or keep in inventory?")
         gui.elements.reset_time_slider:render("Failed Run Threshold (seconds)", "Set the time in seconds for failed run time for resetting")
         gui.elements.exit_pit_toggle:render("Enable Exit Pit", "Toggle Exit Pit task on/off")
-        
-        -- First render the gambling toggle
         gui.elements.gamble_toggle:render("Enable Gambling", "Toggle gambling on/off")
-        
-        -- Only render the gamble category if gambling is enabled
-        if gui.elements.gamble_toggle:get() then
-            gui.elements.gamble_category:render("Gamble Category", gui.gamble_categories, "Select the item category to gamble")
-        end
-        
+        gui.elements.gamble_category:render("Gamble Category", gui.gamble_categories, "Select the item category to gamble")
         gui.elements.greater_affix_slider:render("Keep Greater Affix Count ", "Set the number of greater affixes to Keep (0-3)")
-        
         -- Path Settings subtree (moved to bottom)
         if gui.elements.path_settings_tree:push("Path Settings") then
             gui.elements.path_angle_slider:render("Path Angle", "Adjust the angle for path filtering (0-36 degrees)")
