@@ -1,21 +1,23 @@
 local gui = require "gui"
 local settings = {
     enabled = false,
-    elite_only = false,
+    elites_only = false,
     pit_level = 1,
+    loot_enabled = true, -- Default to true
     path_angle = 0,
-    reset_time = 600, -- Default to 1
+    reset_time = 1, -- Default to 1
     exit_pit_enabled = true, -- Default to true
     explorer_grid_size = 10,
     gamble_category = "Cap",
     greater_affix_threshold = 1,
-    gamble_enabled = true,
+    gamble_enabled = false,
 }
 
 function settings:update_settings()
     settings.enabled = gui.elements.main_toggle:get()
     settings.elites_only = gui.elements.elite_only_toggle:get()
     settings.pit_level = gui.elements.pit_level_slider:get()
+    settings.loot_enabled = gui.elements.loot_toggle:get()
     settings.loot_modes = gui.elements.loot_modes:get()
     settings.path_angle = gui.elements.path_angle_slider:get()
     settings.reset_time = gui.elements.reset_time_slider:get()
