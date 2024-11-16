@@ -9,7 +9,8 @@ local loot_timeout = 3
 local status_enum = {
     IDLE = 'idle',
     WAITING = 'waiting for alfred to complete',
-    LOOTING = 'looting stuff on floor'
+    LOOTING = 'looting stuff on floor',
+    TELEPORTING = 'returning to cerrigar'
 }
 local task = {
     name = 'alfred_running', -- change to your choice of task name
