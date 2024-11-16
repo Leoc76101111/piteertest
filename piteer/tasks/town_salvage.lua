@@ -81,6 +81,7 @@ local town_salvage_task = {
 }
 
 function town_salvage_task.shouldExecute()
+    if settings.use_alfred and PLUGIN_alfred_the_butler then return false end
     local player = get_local_player()
     local inventory_full = utils.is_inventory_full()
     local in_cerrigar = utils.player_in_zone("Scos_Cerrigar")

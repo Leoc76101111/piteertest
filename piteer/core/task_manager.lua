@@ -57,6 +57,7 @@ local task_files = {
     "stupid_ladder",
     "kill_boss",
     "kill_monsters",
+    "alfred",
     "finish_pit",  -- Move finish_pit earlier in the list
     --"exit_pit",    -- Place exit_pit immediately after finish_pit
     "explore_pit",

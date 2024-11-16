@@ -11,6 +11,8 @@ local settings = {
     gamble_category = "Cap",
     greater_affix_threshold = 1,
     gamble_enabled = false,
+    use_alfred = false,
+    alfred_return = false,
 }
 
 function settings:update_settings()
@@ -26,6 +28,8 @@ function settings:update_settings()
     settings.gamble_category = gui.gamble_categories[gui.elements.gamble_category:get() + 1]
     settings.greater_affix_threshold = gui.elements.greater_affix_slider:get()
     settings.gamble_enabled = gui.elements.gamble_toggle:get()
+    settings.use_alfred = gui.elements.use_alfred:get()
+    settings.alfred_return = gui.elements.alfred_return:get()
 end
 
 return settings
