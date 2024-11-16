@@ -38,6 +38,8 @@ gui.elements = {
     gamble_category = combo_box:new(0, get_hash("piteer_gamble_category")),
     greater_affix_slider = slider_int:new(0, 3, 1, get_hash("greater_affix_slider")),
     gamble_toggle = create_checkbox("gamble_toggle"),
+    use_alfred = create_checkbox("use_alfred"),
+    alfred_return = create_checkbox("aflred_return")
 }
 
 function gui.render()
@@ -51,7 +53,17 @@ function gui.render()
         gui.elements.pit_level_slider:render("Pit Level", "Which Pit level do you want to enter?")
         --gui.elements.pit_level:render("Level", "Which level do you want to enter?", false, "", "")
         --gui.elements.loot_toggle:render("Enable Looting", "Toggle looting on/off")        
-        gui.elements.loot_modes:render("Loot Modes", gui.loot_modes_options, "Nothing and Stash will get you stuck for now")
+        if PLUGIN_alfred_the_butler then
+            local alfred_status = PLUGIN_alfred_the_butler.get_status()
+            if alfred_status.enabled then
+                gui.elements.use_alfred:render("Use alfred", "use alfred to manage salvage/sell/stash")
+            end
+        end
+        if not PLUGIN_alfred_the_butler or not gui.elements.use_alfred:get() then
+            gui.elements.loot_modes:render("Loot Modes", gui.loot_modes_options, "Nothing and Stash will get you stuck for now")
+        else
+            gui.elements.alfred_return:render("Return for loot", "return to pit to collect floor loot")
+        end
         gui.elements.path_angle_slider:render("Path Angle", "Adjust the angle for path filtering (0-360 degrees)")
         gui.elements.reset_time_slider:render("Reset Time (seconds)", "Set the time in seconds for resetting all dungeons")
         gui.elements.exit_pit_toggle:render("Enable Exit Pit", "Toggle Exit Pit task on/off")
