@@ -9,8 +9,7 @@ local loot_timeout = 3
 local status_enum = {
     IDLE = 'idle',
     WAITING = 'waiting for alfred to complete',
-    LOOTING = 'looting stuff on floor',
-    TELEPORTING = 'returning to cerrigar'
+    LOOTING = 'looting stuff on floor'
 }
 local task = {
     name = 'alfred_running', -- change to your choice of task name
@@ -46,7 +45,6 @@ function task.shouldExecute()
         then
             return true
         elseif task.status == status_enum['WAITING'] or
-            task.status == status_enum['TELEPORTING'] or
             task.status == status_enum['LOOTING']
         then
             return true
@@ -65,14 +63,16 @@ function task.Execute()
         elseif not floor_has_loot() or not settings.alfred_return then
             PLUGIN_alfred_the_butler.trigger_tasks(plugin_label,reset)
             teleport_to_waypoint(0x76D58)
-            task.status = status_enum['TELEPORTING']
         else
             PLUGIN_alfred_the_butler.trigger_tasks_with_teleport(plugin_label,reset)
         end
     elseif task.status == status_enum['LOOTING'] and get_time_since_inject() > loot_start + loot_timeout then
         task.status = status_enum['IDLE']
         tracker:set_boss_task_running(false)
-    elseif task.status == status_enum['TELEPORTING'] then
+    elseif task.status == status_enum['WAITING'] and
+        not utils.player_in_zone("Scos_Cerrigar") and
+        (not floor_has_loot() or not settings.alfred_return)
+    then
         teleport_to_waypoint(0x76D58)
     end
 end
