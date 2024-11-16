@@ -43,7 +43,7 @@ gui.elements = {
 }
 
 function gui.render()
-    if not gui.elements.main_tree:push("Piteer V3.5B") then return end
+    if not gui.elements.main_tree:push("Piteer V3.6") then return end
 
     gui.elements.main_toggle:render("Enable", "Enable the bot")
     
