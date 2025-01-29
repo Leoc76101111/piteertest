@@ -13,6 +13,9 @@ local settings = {
     gamble_enabled = false,
     use_alfred = false,
     alfred_return = false,
+    upgrade_toggle = false,
+    upgrade_mode = 0,
+    upgrade_threshold = 50,
 }
 
 function settings:update_settings()
@@ -30,6 +33,9 @@ function settings:update_settings()
     settings.gamble_enabled = gui.elements.gamble_toggle:get()
     settings.use_alfred = gui.elements.use_alfred:get()
     settings.alfred_return = gui.elements.alfred_return:get()
+    settings.upgrade_toggle = gui.elements.upgrade_toggle:get()
+    settings.upgrade_mode = gui.elements.upgrade_mode:get()
+    settings.upgrade_threshold = gui.elements.upgrade_threshold:get()
 end
 
 return settings

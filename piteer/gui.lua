@@ -18,6 +18,12 @@ gui.loot_modes_enum = {
     SALVAGE = 2,
     STASH = 3,
 }
+gui.upgrade_modes_enum = {
+    HIGHEST = 0,
+    LOWEST = 1,
+    PRIORITY = 2
+}
+gui.upgrade_mode = { "Highest to lowest", "Lowest to highest"}
 
 gui.gamble_categories = { "Quarterstaff","Cap", "Whispering Key", "Tunic", "Gloves", "Boots", "Pants", "Amulet", "Ring", "Polearm", "Glaive"}
 
@@ -39,11 +45,14 @@ gui.elements = {
     greater_affix_slider = slider_int:new(0, 3, 1, get_hash("greater_affix_slider")),
     gamble_toggle = create_checkbox("gamble_toggle"),
     use_alfred = create_checkbox("use_alfred"),
-    alfred_return = create_checkbox("aflred_return")
+    alfred_return = create_checkbox("aflred_return"),
+    upgrade_toggle = create_checkbox("upgrade_toggle"),
+    upgrade_mode = combo_box:new(0, get_hash("piteer_upgrade_mode")),
+    upgrade_threshold = slider_int:new(10, 100, 50, get_hash("upgrade_threshold"))
 }
 
 function gui.render()
-    if not gui.elements.main_tree:push("Piteer V3.6") then return end
+    if not gui.elements.main_tree:push("Piteer V3.7") then return end
 
     gui.elements.main_toggle:render("Enable", "Enable the bot")
     
@@ -61,6 +70,7 @@ function gui.render()
         end
         if not PLUGIN_alfred_the_butler or not gui.elements.use_alfred:get() then
             gui.elements.loot_modes:render("Loot Modes", gui.loot_modes_options, "Nothing and Stash will get you stuck for now")
+            gui.elements.greater_affix_slider:render("Greater Affix Threshold", "Set the number of greater affixes to salvage (0-3)")
         else
             gui.elements.alfred_return:render("Return for loot", "return to pit to collect floor loot")
         end
@@ -69,8 +79,12 @@ function gui.render()
         gui.elements.exit_pit_toggle:render("Enable Exit Pit", "Toggle Exit Pit task on/off")
         gui.elements.explorer_grid_size_slider:render("Explorer Grid Size", "Adjust the grid size for exploration (1.0-2.0)")
         gui.elements.gamble_category:render("Gamble Category", gui.gamble_categories, "Select the item category to gamble")
-        gui.elements.greater_affix_slider:render("Greater Affix Threshold", "Set the number of greater affixes to salvage (0-3)")
         gui.elements.gamble_toggle:render("Enable Gambling", "Toggle gambling on/off")
+        gui.elements.upgrade_toggle:render("Enable Glyph Upgrade", "Toggle glyph upgrade on/off")
+        if gui.elements.upgrade_toggle:get() then
+            gui.elements.upgrade_mode:render("Upgrade mode", gui.upgrade_mode, "Select how to upgrade glyphs")
+            gui.elements.upgrade_threshold:render("Upgrade threshold", "only upgrade glyph if the %% chance is greater or equal to upgrade threshold")
+        end
         gui.elements.settings_tree:pop()
     end
 
