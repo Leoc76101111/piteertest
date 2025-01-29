@@ -126,7 +126,9 @@ end
 
 function task.Execute()
     local npc = get_npc()
-    if task.current_state == upgrade_state.INIT or (npc and utils.distance_to(npc) > 2) then
+    if task.current_state == upgrade_state.INIT then
+        init_upgrade()
+    elseif npc and utils.distance_to(npc) > 2 and task.current_state ~= upgrade_state.MOVING_TO_NPC then
         init_upgrade()
     elseif task.current_state == upgrade_state.MOVING_TO_NPC then
         move_to_npc()
