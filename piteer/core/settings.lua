@@ -16,6 +16,7 @@ local settings = {
     upgrade_toggle = false,
     upgrade_mode = 0,
     upgrade_threshold = 50,
+    upgrade_legendary_toggle = false,
 }
 
 function settings:update_settings()
@@ -36,6 +37,7 @@ function settings:update_settings()
     settings.upgrade_toggle = gui.elements.upgrade_toggle:get()
     settings.upgrade_mode = gui.elements.upgrade_mode:get()
     settings.upgrade_threshold = gui.elements.upgrade_threshold:get()
+    settings.upgrade_legendary_toggle = gui.elements.upgrade_legendary_toggle:get()
 end
 
 return settings

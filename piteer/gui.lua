@@ -48,14 +48,15 @@ gui.elements = {
     alfred_return = create_checkbox("aflred_return"),
     upgrade_toggle = create_checkbox("upgrade_toggle"),
     upgrade_mode = combo_box:new(0, get_hash("piteer_upgrade_mode")),
-    upgrade_threshold = slider_int:new(10, 100, 50, get_hash("upgrade_threshold"))
+    upgrade_threshold = slider_int:new(10, 100, 50, get_hash("upgrade_threshold")),
+    upgrade_legendary_toggle = create_checkbox("upgrade_legendary_toggle"),
 }
 
 function gui.render()
     if not gui.elements.main_tree:push("Piteer V3.7") then return end
 
     gui.elements.main_toggle:render("Enable", "Enable the bot")
-    
+
     if gui.elements.settings_tree:push("Settings") then
         --gui.elements.melee_logic:render("Melee", "Do we need to move into Melee?")
         gui.elements.elite_only_toggle:render("Elite Only", "Do we only want to seek out elites in the Pit?")
@@ -84,6 +85,7 @@ function gui.render()
         if gui.elements.upgrade_toggle:get() then
             gui.elements.upgrade_mode:render("Upgrade mode", gui.upgrade_mode, "Select how to upgrade glyphs")
             gui.elements.upgrade_threshold:render("Upgrade threshold", "only upgrade glyph if the %% chance is greater or equal to upgrade threshold")
+            gui.elements.upgrade_legendary_toggle:render("Upgrade to legendary glyph", "Disable this to save gem fragments")
         end
         gui.elements.settings_tree:pop()
     end
