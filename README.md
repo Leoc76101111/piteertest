@@ -3,6 +3,7 @@
   - Set upgrade mode to "Highest to Lowest" or "Lowest to Highest"
   - Set upgrade threshold, will only upgrade the glyph if upgrade chance >= threshold
   - Set upgrade to legendary glyph, disable by default to save gem fragments (gem fragments are important in season 7)
+  
 **Version 3.5**
   - Added Stashing of items based on your "Keep Greater Affix Count" slider
     set your threshold to your desired amount of GA's to keep, and set your keep items to stash and the script will salvage items < the keep greater affix count and it will stash the items that are > or = to your threshold. 
