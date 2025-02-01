@@ -148,7 +148,7 @@ function task.shouldExecute()
         tracker:set_boss_task_running(true)
         local glyphs = get_glyphs()
         for i = 1, glyphs:size() do
-            if glyphs:get(i):can_upgrade() then return true end
+            if should_upgrade(glyphs:get(i)) then return true end
         end
         return not (glyphs:size() > 0 and task.current_state == upgrade_state.INIT)
     end
