@@ -1,8 +1,30 @@
 local gui = {}
-local plugin_label = "piteer v3.5a"
+local plugin_label = "piteer v3.8"
 
 local function create_checkbox(key)
     return checkbox:new(false, get_hash(plugin_label .. "_" .. key))
+end
+
+
+-- not able to require utils (and settings) because of circular reference
+-- so the function lives in gui
+function gui.get_character_class()
+    local local_player = get_local_player();
+    if not local_player then return 'default' end
+    local class_id = local_player:get_character_class_id()
+    local character_classes = {
+        [0] = 'sorcerer',
+        [1] = 'barbarian',
+        [3] = 'rogue',
+        [5] = 'druid',
+        [6] = 'necromancer',
+        [7] = 'spiritborn'
+    }
+    if character_classes[class_id] then
+        return character_classes[class_id]
+    else
+        return 'default'
+    end
 end
 
 gui.loot_modes_options = {
@@ -25,7 +47,15 @@ gui.upgrade_modes_enum = {
 }
 gui.upgrade_mode = { "Highest to lowest", "Lowest to highest"}
 
-gui.gamble_categories = { "Quarterstaff","Cap", "Whispering Key", "Tunic", "Gloves", "Boots", "Pants", "Amulet", "Ring", "Polearm", "Glaive"}
+gui.gamble_categories = {
+    ['sorcerer'] = {"Cap", "Whispering Key", "Tunic", "Gloves", "Boots", "Pants", "Amulet", "Ring", "Sword", "Mace", "Dagger", "Staff", "Wand", "Focus"},
+    ['barbarian'] = {"Cap", "Whispering Key", "Tunic", "Gloves", "Boots", "Pants", "Amulet", "Ring", "Axe", "Sword", "Mace", "Two-Handed Axe", "Two-Handed Sword", "Two-Handed Mace", "Polearm"},
+    ['rogue'] = {"Cap", "Whispering Key", "Tunic", "Gloves", "Boots", "Pants", "Amulet", "Ring", "Sword", "Dagger", "Bow", "Crossbow"},
+    ['druid'] = {"Cap", "Whispering Key", "Tunic", "Gloves", "Boots", "Pants", "Amulet", "Ring", "Axe", "Sword", "Mace", "Two-Handed Axe", "Two-Handed Mace", "Polearm", "Dagger", "Staff", "Totem"},
+    ['necromancer'] = {"Cap", "Whispering Key", "Tunic", "Gloves", "Boots", "Pants", "Amulet", "Ring", "Axe", "Sword", "Mace", "Two-Handed Axe", "Two-Handed Sword", "Scythe", "Two-Handed Mace", "Two-Handed Scythe", "Dagger", "Shield", "Wand", "Focus"},
+    ['spiritborn'] = {"Quarterstaff", "Cap", "Whispering Key", "Tunic", "Gloves", "Boots", "Pants", "Amulet", "Ring", "Polearm", "Glaive"},
+    ['default'] = {"CLASS NOT LOADED"}
+}
 
 gui.elements = {
     main_tree = tree_node:new(0),
@@ -41,7 +71,15 @@ gui.elements = {
     reset_time_slider = slider_int:new(60, 900, 600, get_hash("reset_time_slider")), -- New slider for reset time in seconds
     exit_pit_toggle = create_checkbox("exit_pit_toggle"),
     explorer_grid_size_slider = slider_int:new(10, 20, 15, get_hash("explorer_grid_size_slider")),
-    gamble_category = combo_box:new(0, get_hash("piteer_gamble_category")),
+    gamble_category = {
+        ['sorcerer'] = combo_box:new(0, get_hash("piteer_gamble_sorcerer_category")),
+        ['barbarian'] = combo_box:new(0, get_hash("piteer_gamble_barbarian_category")),
+        ['rogue'] = combo_box:new(0, get_hash("piteer_gamble_rogue_category")),
+        ['druid'] = combo_box:new(0, get_hash("piteer_gamble_druid_category")),
+        ['necromancer'] = combo_box:new(0, get_hash("piteer_gamble_necromancer_category")),
+        ['spiritborn'] = combo_box:new(0, get_hash("piteer_gamble_spiritborn_category")),
+        ['default'] = combo_box:new(0, get_hash("piteer_gamble_default_category")),
+    },
     greater_affix_slider = slider_int:new(0, 3, 1, get_hash("greater_affix_slider")),
     gamble_toggle = create_checkbox("gamble_toggle"),
     use_alfred = create_checkbox("use_alfred"),
@@ -53,7 +91,8 @@ gui.elements = {
 }
 
 function gui.render()
-    if not gui.elements.main_tree:push("Piteer V3.7") then return end
+    if not gui.elements.main_tree:push("Piteer V3.8") then return end
+    local class = gui.get_character_class()
 
     gui.elements.main_toggle:render("Enable", "Enable the bot")
 
@@ -79,7 +118,7 @@ function gui.render()
         gui.elements.reset_time_slider:render("Reset Time (seconds)", "Set the time in seconds for resetting all dungeons")
         gui.elements.exit_pit_toggle:render("Enable Exit Pit", "Toggle Exit Pit task on/off")
         gui.elements.explorer_grid_size_slider:render("Explorer Grid Size", "Adjust the grid size for exploration (1.0-2.0)")
-        gui.elements.gamble_category:render("Gamble Category", gui.gamble_categories, "Select the item category to gamble")
+        gui.elements.gamble_category[class]:render("Gamble Category", gui.gamble_categories[class], "Select the item category to gamble")
         gui.elements.gamble_toggle:render("Enable Gambling", "Toggle gambling on/off")
         gui.elements.upgrade_toggle:render("Enable Glyph Upgrade", "Toggle glyph upgrade on/off")
         if gui.elements.upgrade_toggle:get() then

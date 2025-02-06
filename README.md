@@ -1,3 +1,7 @@
+**Version 3.8**
+  - updated gamble to be class specific
+  - If you see the gamble category as "CLASS NOT LOADED" this is because you loaded qqt while in loading screen or on mount. Just need to press the F5 (Lua reload key) button
+
 **Version 3.7**
   - Added glyph upgrade functionality
   - Set upgrade mode to "Highest to Lowest" or "Lowest to Highest"
