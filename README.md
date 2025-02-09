@@ -1,3 +1,7 @@
+**Version 3.9**
+  - added exit pit delay
+  - updated glyph upgrade to use existing function (slight cleanup)
+
 **Version 3.8**
   - updated gamble to be class specific
   - If you see the gamble category as "CLASS NOT LOADED" this is because you loaded qqt while in loading screen or on mount. Just need to press the F5 (Lua reload key) button

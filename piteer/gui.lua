@@ -1,5 +1,5 @@
 local gui = {}
-local plugin_label = "piteer v3.8"
+local plugin_label = "piteer v3.9"
 
 local function create_checkbox(key)
     return checkbox:new(false, get_hash(plugin_label .. "_" .. key))
@@ -88,10 +88,11 @@ gui.elements = {
     upgrade_mode = combo_box:new(0, get_hash("piteer_upgrade_mode")),
     upgrade_threshold = slider_int:new(10, 100, 50, get_hash("upgrade_threshold")),
     upgrade_legendary_toggle = create_checkbox("upgrade_legendary_toggle"),
+    exit_pit_delay = slider_int:new(10, 300, 10, get_hash("exit_pit_delay")),
 }
 
 function gui.render()
-    if not gui.elements.main_tree:push("Piteer V3.8") then return end
+    if not gui.elements.main_tree:push("Piteer V3.9") then return end
     local class = gui.get_character_class()
 
     gui.elements.main_toggle:render("Enable", "Enable the bot")
@@ -114,10 +115,15 @@ function gui.render()
         else
             gui.elements.alfred_return:render("Return for loot", "return to pit to collect floor loot")
         end
+
         gui.elements.path_angle_slider:render("Path Angle", "Adjust the angle for path filtering (0-360 degrees)")
+        gui.elements.explorer_grid_size_slider:render("Explorer Grid Size", "Adjust the grid size for exploration (1.0-2.0)")
+
         gui.elements.reset_time_slider:render("Reset Time (seconds)", "Set the time in seconds for resetting all dungeons")
         gui.elements.exit_pit_toggle:render("Enable Exit Pit", "Toggle Exit Pit task on/off")
-        gui.elements.explorer_grid_size_slider:render("Explorer Grid Size", "Adjust the grid size for exploration (1.0-2.0)")
+        if gui.elements.exit_pit_toggle:get() then
+            gui.elements.exit_pit_delay:render("Exit delay", "time in seconds to wait before ending pit")
+        end
         gui.elements.gamble_category[class]:render("Gamble Category", gui.gamble_categories[class], "Select the item category to gamble")
         gui.elements.gamble_toggle:render("Enable Gambling", "Toggle gambling on/off")
         gui.elements.upgrade_toggle:render("Enable Glyph Upgrade", "Toggle glyph upgrade on/off")

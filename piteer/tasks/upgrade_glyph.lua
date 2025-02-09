@@ -1,6 +1,7 @@
 local plugin_label = 'piteer' -- change to your plugin name
 
 local utils = require "core.utils"
+local enums = require "data.enums"
 local explorerlite = require "core.explorerlite"
 local settings = require 'core.settings'
 local tracker = require "core.tracker"
@@ -25,26 +26,13 @@ local task = {
     last_interaction_time = nil,
 }
 
-local function get_npc()
-    local actors = actors_manager:get_all_actors()
-    for _, actor in pairs(actors) do
-        local name = actor:get_skin_name()
-        if name == "Gizmo_Paragon_Glyph_Upgrade" then
-            -- console.print("Glyph upgrade location found: " .. name)
-            return actor
-        end
-    end
-    --console.print("No NPC found")
-    return nil
-end
-
 local function init_upgrade()
     task.current_state = upgrade_state.MOVING_TO_NPC
     blacklist = {}
     failed_count = 0
 end
 local function move_to_npc()
-    local npc = get_npc()
+    local npc = utils.get_object_by_name(enums.misc.gizmo_paragon_glyph_upgrade)
     if npc then
         explorerlite:set_custom_target(npc:get_position())
         explorerlite:move_to_target()
@@ -56,7 +44,7 @@ local function move_to_npc()
 end
 
 local function interact_npc()
-    local npc = get_npc()
+    local npc = utils.get_object_by_name(enums.misc.gizmo_paragon_glyph_upgrade)
     if npc then
         local current_time = get_time_since_inject()
         interact_vendor(npc)
@@ -143,7 +131,7 @@ end
 
 function task.shouldExecute()
     if not settings.upgrade_toggle then return false end
-    local npc = get_npc()
+    local npc = utils.get_object_by_name(enums.misc.gizmo_paragon_glyph_upgrade)
     if npc then
         tracker:set_boss_task_running(true)
         local glyphs = get_glyphs()
@@ -156,7 +144,7 @@ function task.shouldExecute()
 end
 
 function task.Execute()
-    local npc = get_npc()
+    local npc = utils.get_object_by_name(enums.misc.gizmo_paragon_glyph_upgrade)
     if task.current_state == upgrade_state.INIT then
         init_upgrade()
     elseif npc and utils.distance_to(npc) > 2 and task.current_state ~= upgrade_state.MOVING_TO_NPC then

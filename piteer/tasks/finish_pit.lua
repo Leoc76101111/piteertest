@@ -64,12 +64,17 @@ local task = {
 
         current_time = get_time_since_inject()
         console.print(string.format("Current time: %.2f, Start time: %.2f", current_time, start_time))
-        if current_time - start_time > 10 then
-            console.print("25 seconds have passed. Resetting task and dungeons.")
+        local exit_delay = settings.exit_pit_delay
+
+        if current_time - start_time > exit_delay then
+            console.print(exit_delay .. " seconds have passed. Resetting task and dungeons.")
             start_time = 0
             explorer.is_task_running = false
             reset_all_dungeons()
             return task
+        else
+            local timeout = exit_delay - current_time + start_time
+            console.print(string.format("Waiting for remaining exit delay %.2f", timeout))
         end
 
         explorer.is_task_running = false
