@@ -1,5 +1,5 @@
 local gui = {}
-local plugin_label = "piteer v3.9"
+local plugin_label = "Piteer V3.10"
 
 local function create_checkbox(key)
     return checkbox:new(false, get_hash(plugin_label .. "_" .. key))
@@ -89,10 +89,12 @@ gui.elements = {
     upgrade_threshold = slider_int:new(10, 100, 50, get_hash("upgrade_threshold")),
     upgrade_legendary_toggle = create_checkbox("upgrade_legendary_toggle"),
     exit_pit_delay = slider_int:new(10, 300, 10, get_hash("exit_pit_delay")),
+    cheat_death = create_checkbox("cheat_death"),
+    escape_percentage = slider_int:new(10, 100, 40, get_hash("escape_percentage")),
 }
 
 function gui.render()
-    if not gui.elements.main_tree:push("Piteer V3.9") then return end
+    if not gui.elements.main_tree:push(plugin_label) then return end
     local class = gui.get_character_class()
 
     gui.elements.main_toggle:render("Enable", "Enable the bot")
@@ -131,6 +133,10 @@ function gui.render()
             gui.elements.upgrade_mode:render("Upgrade mode", gui.upgrade_mode, "Select how to upgrade glyphs")
             gui.elements.upgrade_threshold:render("Upgrade threshold", "only upgrade glyph if the %% chance is greater or equal to upgrade threshold")
             gui.elements.upgrade_legendary_toggle:render("Upgrade to legendary glyph", "Disable this to save gem fragments")
+        end
+        gui.elements.cheat_death:render("Enable Hardcore cheat death", "Enable Hardcore cheat death")
+        if gui.elements.cheat_death:get() then
+            gui.elements.escape_percentage:render("Health %%", "%% health to immediately leave pit")
         end
         gui.elements.settings_tree:pop()
     end

@@ -18,6 +18,8 @@ local settings = {
     upgrade_threshold = 50,
     upgrade_legendary_toggle = false,
     exit_pit_delay = 10,
+    cheat_death = false,
+    escape_percentage = 40,
 }
 
 function settings:update_settings()
@@ -41,6 +43,8 @@ function settings:update_settings()
     settings.upgrade_threshold = gui.elements.upgrade_threshold:get()
     settings.upgrade_legendary_toggle = gui.elements.upgrade_legendary_toggle:get()
     settings.exit_pit_delay = gui.elements.exit_pit_delay:get()
+    settings.cheat_death = gui.elements.cheat_death:get()
+    settings.escape_percentage = gui.elements.escape_percentage:get()
 end
 
 return settings

@@ -52,6 +52,7 @@ end
 
 -- Modify the task registration order
 local task_files = {
+    "cheat_death",
     "move_to_cerrigar",
     "enter_portal",
     "stupid_ladder",
