@@ -1,5 +1,5 @@
 local gui = {}
-local plugin_label = "Piteer V3.10"
+local plugin_label = "Piteer V3.11"
 
 local function create_checkbox(key)
     return checkbox:new(false, get_hash(plugin_label .. "_" .. key))
@@ -60,7 +60,8 @@ gui.gamble_categories = {
 gui.elements = {
     main_tree = tree_node:new(0),
     main_toggle = create_checkbox("main_toggle"),
-    settings_tree = tree_node:new(1),
+    pit_settings_tree = tree_node:new(1),
+    cerrigar_settings_tree = tree_node:new(1),
     melee_logic = create_checkbox("melee_logic"),
     elite_only_toggle = create_checkbox("elite_only"),
     pit_level = input_text:new(get_hash("piteer_pit_level_unique_id")),
@@ -91,6 +92,7 @@ gui.elements = {
     exit_pit_delay = slider_int:new(10, 300, 10, get_hash("exit_pit_delay")),
     cheat_death = create_checkbox("cheat_death"),
     escape_percentage = slider_int:new(10, 100, 40, get_hash("escape_percentage")),
+    interact_shrine = create_checkbox('interact_shrine'),
 }
 
 function gui.render()
@@ -99,12 +101,30 @@ function gui.render()
 
     gui.elements.main_toggle:render("Enable", "Enable the bot")
 
-    if gui.elements.settings_tree:push("Settings") then
-        --gui.elements.melee_logic:render("Melee", "Do we need to move into Melee?")
+    if gui.elements.pit_settings_tree:push("Pit Settings") then
         gui.elements.elite_only_toggle:render("Elite Only", "Do we only want to seek out elites in the Pit?")
         gui.elements.pit_level_slider:render("Pit Level", "Which Pit level do you want to enter?")
-        --gui.elements.pit_level:render("Level", "Which level do you want to enter?", false, "", "")
-        --gui.elements.loot_toggle:render("Enable Looting", "Toggle looting on/off")        
+        gui.elements.path_angle_slider:render("Path Angle", "Adjust the angle for path filtering (0-360 degrees)")
+        gui.elements.explorer_grid_size_slider:render("Explorer Grid Size", "Adjust the grid size for exploration (1.0-2.0)")
+        gui.elements.reset_time_slider:render("Reset Time (seconds)", "Set the time in seconds for resetting all dungeons")
+        gui.elements.exit_pit_toggle:render("Enable Exit Pit", "Toggle Exit Pit task on/off")
+        if gui.elements.exit_pit_toggle:get() then
+            gui.elements.exit_pit_delay:render("Exit delay", "time in seconds to wait before ending pit")
+        end
+        gui.elements.upgrade_toggle:render("Enable Glyph Upgrade", "Toggle glyph upgrade on/off")
+        if gui.elements.upgrade_toggle:get() then
+            gui.elements.upgrade_mode:render("Upgrade mode", gui.upgrade_mode, "Select how to upgrade glyphs")
+            gui.elements.upgrade_threshold:render("Upgrade threshold", "only upgrade glyph if the %% chance is greater or equal to upgrade threshold")
+            gui.elements.upgrade_legendary_toggle:render("Upgrade to legendary glyph", "Disable this to save gem fragments")
+        end
+        gui.elements.interact_shrine:render("Enable shrine interaction (and witch power)", "Enable shrine interaction (and witch power S07)")
+        gui.elements.cheat_death:render("Enable Hardcore cheat death", "Enable Hardcore cheat death")
+        if gui.elements.cheat_death:get() then
+            gui.elements.escape_percentage:render("Health %%", "%% health to immediately leave pit")
+        end
+        gui.elements.pit_settings_tree:pop()
+    end
+    if gui.elements.pit_settings_tree:push("Cerrigar Settings") then
         if PLUGIN_alfred_the_butler then
             local alfred_status = PLUGIN_alfred_the_butler.get_status()
             if alfred_status.enabled then
@@ -117,28 +137,9 @@ function gui.render()
         else
             gui.elements.alfred_return:render("Return for loot", "return to pit to collect floor loot")
         end
-
-        gui.elements.path_angle_slider:render("Path Angle", "Adjust the angle for path filtering (0-360 degrees)")
-        gui.elements.explorer_grid_size_slider:render("Explorer Grid Size", "Adjust the grid size for exploration (1.0-2.0)")
-
-        gui.elements.reset_time_slider:render("Reset Time (seconds)", "Set the time in seconds for resetting all dungeons")
-        gui.elements.exit_pit_toggle:render("Enable Exit Pit", "Toggle Exit Pit task on/off")
-        if gui.elements.exit_pit_toggle:get() then
-            gui.elements.exit_pit_delay:render("Exit delay", "time in seconds to wait before ending pit")
-        end
-        gui.elements.gamble_category[class]:render("Gamble Category", gui.gamble_categories[class], "Select the item category to gamble")
         gui.elements.gamble_toggle:render("Enable Gambling", "Toggle gambling on/off")
-        gui.elements.upgrade_toggle:render("Enable Glyph Upgrade", "Toggle glyph upgrade on/off")
-        if gui.elements.upgrade_toggle:get() then
-            gui.elements.upgrade_mode:render("Upgrade mode", gui.upgrade_mode, "Select how to upgrade glyphs")
-            gui.elements.upgrade_threshold:render("Upgrade threshold", "only upgrade glyph if the %% chance is greater or equal to upgrade threshold")
-            gui.elements.upgrade_legendary_toggle:render("Upgrade to legendary glyph", "Disable this to save gem fragments")
-        end
-        gui.elements.cheat_death:render("Enable Hardcore cheat death", "Enable Hardcore cheat death")
-        if gui.elements.cheat_death:get() then
-            gui.elements.escape_percentage:render("Health %%", "%% health to immediately leave pit")
-        end
-        gui.elements.settings_tree:pop()
+        gui.elements.gamble_category[class]:render("Gamble Category", gui.gamble_categories[class], "Select the item category to gamble")
+        gui.elements.pit_settings_tree:pop()
     end
 
     gui.elements.main_tree:pop()

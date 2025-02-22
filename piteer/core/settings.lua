@@ -20,6 +20,7 @@ local settings = {
     exit_pit_delay = 10,
     cheat_death = false,
     escape_percentage = 40,
+    interact_shrine = true,
 }
 
 function settings:update_settings()
@@ -45,6 +46,7 @@ function settings:update_settings()
     settings.exit_pit_delay = gui.elements.exit_pit_delay:get()
     settings.cheat_death = gui.elements.cheat_death:get()
     settings.escape_percentage = gui.elements.escape_percentage:get()
+    settings.interact_shrine = gui.elements.interact_shrine:get()
 end
 
 return settings

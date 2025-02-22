@@ -1,3 +1,11 @@
+**Version 3.11**
+  - added shrine interaction
+  - added forgotten altar inateraction
+  - restructured menu/clean up
+
+**Version 3.10**
+  - added cheat death to exit pit if hp below threshold (only needed in hardcore)
+
 **Version 3.9**
   - added exit pit delay
   - updated glyph upgrade to use existing function (slight cleanup)

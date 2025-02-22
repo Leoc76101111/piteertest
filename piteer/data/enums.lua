@@ -29,6 +29,15 @@ local enums = {
     waypoints = {
         CERRIGAR = 0x76D58,
         LIBRARY = 0x10D63D
+    },
+    shrines = {
+        BLASTWAVE = "Shrine_DRLG_PBAoE",
+        PROTECTION = "Shrine_DRLG_Protection",
+        CRIT = "Shrine_DRLG_Crit",
+        GOLD = "Shrine_DRLG_Gold",
+        ARTILLERY = "Shrine_DRLG_Artillery",
+        CHANNELING = "Shrine_DRLG_Channeling",
+        WITCHPOWER = "S07_Witch_Bonus_Shrine"
     }
 }
 
