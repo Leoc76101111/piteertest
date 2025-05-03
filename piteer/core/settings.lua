@@ -13,9 +13,18 @@ local settings = {
     gamble_enabled = false,
     use_alfred = false,
     alfred_return = false,
+    upgrade_toggle = false,
+    upgrade_mode = 0,
+    upgrade_threshold = 50,
+    upgrade_legendary_toggle = false,
+    exit_pit_delay = 10,
+    cheat_death = false,
+    escape_percentage = 40,
+    interact_shrine = true,
 }
 
 function settings:update_settings()
+    local class = gui.get_character_class()
     settings.enabled = gui.elements.main_toggle:get()
     settings.elites_only = gui.elements.elite_only_toggle:get()
     settings.pit_level = gui.elements.pit_level_slider:get()
@@ -25,11 +34,19 @@ function settings:update_settings()
     settings.reset_time = gui.elements.reset_time_slider:get()
     settings.exit_pit_enabled = gui.elements.exit_pit_toggle:get()
     settings.explorer_grid_size = gui.elements.explorer_grid_size_slider:get()
-    settings.gamble_category = gui.gamble_categories[gui.elements.gamble_category:get() + 1]
+    settings.gamble_category = gui.gamble_categories[class][gui.elements.gamble_category[class]:get() + 1]
     settings.greater_affix_threshold = gui.elements.greater_affix_slider:get()
     settings.gamble_enabled = gui.elements.gamble_toggle:get()
     settings.use_alfred = gui.elements.use_alfred:get()
     settings.alfred_return = gui.elements.alfred_return:get()
+    settings.upgrade_toggle = gui.elements.upgrade_toggle:get()
+    settings.upgrade_mode = gui.elements.upgrade_mode:get()
+    settings.upgrade_threshold = gui.elements.upgrade_threshold:get()
+    settings.upgrade_legendary_toggle = gui.elements.upgrade_legendary_toggle:get()
+    settings.exit_pit_delay = gui.elements.exit_pit_delay:get()
+    settings.cheat_death = gui.elements.cheat_death:get()
+    settings.escape_percentage = gui.elements.escape_percentage:get()
+    settings.interact_shrine = gui.elements.interact_shrine:get()
 end
 
 return settings

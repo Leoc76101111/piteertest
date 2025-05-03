@@ -39,6 +39,12 @@ PitPlugin = {
     disable = function ()
         gui.elements.main_toggle:set(false)
     end,
+    status = function ()
+        return {
+            ['enabled'] = gui.elements.main_toggle:get(),
+            ['task'] = task_manager.get_current_task()
+        }
+    end,
 }
 
 on_update(function()

@@ -52,11 +52,14 @@ end
 
 -- Modify the task registration order
 local task_files = {
+    "cheat_death",
+    "interact_shrine",
     "move_to_cerrigar",
     "enter_portal",
     "stupid_ladder",
     "kill_boss",
     "kill_monsters",
+    "upgrade_glyph",
     "alfred",
     "finish_pit",  -- Move finish_pit earlier in the list
     --"exit_pit",    -- Place exit_pit immediately after finish_pit
