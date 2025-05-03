@@ -1,5 +1,5 @@
 local gui = {}
-local plugin_label = "Piteer V3.11"
+local plugin_label = "Piteer V3.12"
 
 local function create_checkbox(key)
     return checkbox:new(false, get_hash(plugin_label .. "_" .. key))
@@ -89,6 +89,8 @@ gui.elements = {
     upgrade_mode = combo_box:new(0, get_hash("piteer_upgrade_mode")),
     upgrade_threshold = slider_int:new(10, 100, 50, get_hash("upgrade_threshold")),
     upgrade_legendary_toggle = create_checkbox("upgrade_legendary_toggle"),
+    minimum_glyph_level = slider_int:new(1, 100, 1, get_hash("minimum_glyph_level")),
+    maximum_glyph_level = slider_int:new(1, 100, 100, get_hash("maximum_glyph_level")),
     exit_pit_delay = slider_int:new(10, 300, 10, get_hash("exit_pit_delay")),
     cheat_death = create_checkbox("cheat_death"),
     escape_percentage = slider_int:new(10, 100, 40, get_hash("escape_percentage")),
@@ -116,6 +118,8 @@ function gui.render()
             gui.elements.upgrade_mode:render("Upgrade mode", gui.upgrade_mode, "Select how to upgrade glyphs")
             gui.elements.upgrade_threshold:render("Upgrade threshold", "only upgrade glyph if the %% chance is greater or equal to upgrade threshold")
             gui.elements.upgrade_legendary_toggle:render("Upgrade to legendary glyph", "Disable this to save gem fragments")
+            gui.elements.minimum_glyph_level:render("Minimum level", "Only upgrade glyphs with level greater than or equal to this value")
+            gui.elements.maximum_glyph_level:render("Maximum level", "Only upgrade glyphs with level less than or equal to this value")
         end
         gui.elements.interact_shrine:render("Enable shrine interaction (and witch power)", "Enable shrine interaction (and witch power S07)")
         gui.elements.cheat_death:render("Enable Hardcore cheat death", "Enable Hardcore cheat death")

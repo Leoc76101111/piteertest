@@ -76,7 +76,9 @@ local function should_upgrade(glyph)
     if glyph:can_upgrade() and
         upgrade_chance >= settings.upgrade_threshold and
         (settings.upgrade_legendary_toggle or glyph:get_level() ~= 45) and
-        blacklist[glyph.glyph_name_hash] == nil
+        blacklist[glyph.glyph_name_hash] == nil and
+        glyph:get_level() >= settings.minimum_glyph_level and
+        glyph:get_level() <= settings.maximum_glyph_level
     then
         return true
     end

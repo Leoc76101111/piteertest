@@ -17,6 +17,8 @@ local settings = {
     upgrade_mode = 0,
     upgrade_threshold = 50,
     upgrade_legendary_toggle = false,
+    minimum_glyph_level = 1,
+    maximum_glyph_level = 100,
     exit_pit_delay = 10,
     cheat_death = false,
     escape_percentage = 40,
@@ -43,6 +45,8 @@ function settings:update_settings()
     settings.upgrade_mode = gui.elements.upgrade_mode:get()
     settings.upgrade_threshold = gui.elements.upgrade_threshold:get()
     settings.upgrade_legendary_toggle = gui.elements.upgrade_legendary_toggle:get()
+    settings.minimum_glyph_level = gui.elements.minimum_glyph_level:get()
+    settings.maximum_glyph_level = gui.elements.maximum_glyph_level:get()
     settings.exit_pit_delay = gui.elements.exit_pit_delay:get()
     settings.cheat_death = gui.elements.cheat_death:get()
     settings.escape_percentage = gui.elements.escape_percentage:get()
