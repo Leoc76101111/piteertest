@@ -1,3 +1,6 @@
+**Version 3.12**
+  - added min/ max glyph upgrade levels
+
 **Version 3.11**
   - added shrine interaction
   - added forgotten altar inateraction
