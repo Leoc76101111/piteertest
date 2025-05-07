@@ -51,6 +51,16 @@ function settings:update_settings()
     settings.cheat_death = gui.elements.cheat_death:get()
     settings.escape_percentage = gui.elements.escape_percentage:get()
     settings.interact_shrine = gui.elements.interact_shrine:get()
+    settings.movement_spell_in_explorer = gui.elements.movement_spell_in_explorer:get()
+    settings.use_evade_as_movement_spell = gui.elements.use_evade_as_movement_spell:get()
+    settings.use_teleport = gui.elements.use_teleport:get()
+    settings.use_teleport_enchanted = gui.elements.use_teleport_enchanted:get()
+    settings.use_dash = gui.elements.use_dash:get()
+    settings.use_shadow_step = gui.elements.use_shadow_step:get()
+    settings.use_the_hunter = gui.elements.use_the_hunter:get()
+    settings.use_soar = gui.elements.use_soar:get()
+    settings.use_rushing_claw = gui.elements.use_rushing_claw:get()
+    settings.use_leap = gui.elements.use_leap:get()
 end
 
 return settings

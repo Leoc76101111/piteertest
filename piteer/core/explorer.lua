@@ -808,7 +808,13 @@ local function move_to_target()
         if current_path and current_path[path_index] then
             local next_point = current_path[path_index]
             if next_point and not next_point:is_zero() then
-                pathfinder.request_move(next_point)
+                if settings.movement_spell_in_explorer then
+                    explorer:movement_spell_to_target(target_position)
+                end
+                local new_player_pos = get_player_position()
+                if calculate_distance(player_pos, new_player_pos) == 0 then
+                    pathfinder.request_move(next_point)
+                end
             end
 
             if next_point and next_point.x and not next_point:is_zero() and calculate_distance(player_pos, next_point) < get_grid_size() then
@@ -889,12 +895,43 @@ function explorer:movement_spell_to_target(target)
     local local_player = get_local_player()
     if not local_player then return end
 
-    local movement_spell_id = {
-        288106, -- Sorcerer teleport
-        358761, -- Rogue dash
-        355606, -- Rogue shadow step
-        337031  -- General Evade
-    }
+    local movement_spell_id = {}
+
+    if settings.use_evade_as_movement_spell then
+        table.insert(movement_spell_id, 337031) -- General Evade
+    end
+
+    if settings.use_teleport then
+        table.insert(movement_spell_id, 288106) -- Sorceror Teleport
+    end
+
+    if settings.use_teleport_enchanted then
+        table.insert(movement_spell_id, 959728) -- Sorceror Teleport Enchanted
+    end
+
+    if settings.use_dash then
+        table.insert(movement_spell_id, 358761) -- Rogue Dash
+    end
+
+    if settings.use_shadow_step then
+        table.insert(movement_spell_id, 355606) -- Rogue Shadow Step
+    end
+
+    if settings.use_the_hunter then
+        table.insert(movement_spell_id, 1663206) -- Spiritborn The Hunter
+    end
+
+    if settings.use_soar then
+        table.insert(movement_spell_id, 1871821) -- Spiritborn Soar
+    end
+
+    if settings.use_rushing_claw then
+        table.insert(movement_spell_id, 1871761) -- Spiritborn Rushing Claw
+    end
+
+    if settings.use_leap then
+        table.insert(movement_spell_id, 196545) -- Barbarian Leap
+    end
 
     -- Check if the dash spell is off cooldown and ready to cast
     for _, spell_id in ipairs(movement_spell_id) do

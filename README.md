@@ -1,3 +1,6 @@
+**Version 3.13**
+  - added option to use movement spell while exploring pit
+
 **Version 3.12**
   - added min/ max glyph upgrade levels
 

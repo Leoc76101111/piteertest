@@ -1,5 +1,5 @@
 local gui = {}
-local plugin_label = "Piteer V3.12"
+local plugin_label = "Piteer V3.13"
 
 local function create_checkbox(key)
     return checkbox:new(false, get_hash(plugin_label .. "_" .. key))
@@ -95,6 +95,17 @@ gui.elements = {
     cheat_death = create_checkbox("cheat_death"),
     escape_percentage = slider_int:new(10, 100, 40, get_hash("escape_percentage")),
     interact_shrine = create_checkbox('interact_shrine'),
+    movement_tree = tree_node:new(2),
+    movement_spell_in_explorer = create_checkbox("movement_spell_in_explorer"),
+    use_evade_as_movement_spell = create_checkbox("use_evade_as_movement_spell"),
+    use_teleport = create_checkbox("use_teleport"),
+    use_teleport_enchanted = create_checkbox("use_teleport_enchanted"),
+    use_dash = create_checkbox("use_dash"),
+    use_shadow_step = create_checkbox("use_shadow_step"),
+    use_the_hunter = create_checkbox("use_the_hunter"),
+    use_soar = create_checkbox("use_soar"),
+    use_rushing_claw = create_checkbox("use_rushing_claw"),
+    use_leap = create_checkbox("use_leap"),
 }
 
 function gui.render()
@@ -125,6 +136,21 @@ function gui.render()
         gui.elements.cheat_death:render("Enable Hardcore cheat death", "Enable Hardcore cheat death")
         if gui.elements.cheat_death:get() then
             gui.elements.escape_percentage:render("Health %%", "%% health to immediately leave pit")
+        end
+        gui.elements.movement_spell_in_explorer:render("Use movement spell while exploring", "Will attempt to use movement spell while exploring pit")
+        if gui.elements.movement_spell_in_explorer:get() then
+            if gui.elements.movement_tree:push("Movement Spells") then
+                gui.elements.use_evade_as_movement_spell:render("Default Evade", "Will attempt to use evade as movement spell")
+                gui.elements.use_teleport:render("Sorceror Teleport", "Will attempt to use Sorceror Teleport as movement spell")
+                gui.elements.use_teleport_enchanted:render("Sorceror Teleport Enchanted", "Will attempt to use Sorceror Teleport Enchanted as movement spell")
+                gui.elements.use_dash:render("Rogue Dash", "Will attempt to use Rogue Dash as movement spell")
+                gui.elements.use_shadow_step:render("Rogue Shadow Step", "Will attempt to use Rogue Shadow Step as movement spell")
+                gui.elements.use_the_hunter:render("Spiritborn The Hunter", "Will attempt to use Spiritborn The Hunter as movement spell")
+                gui.elements.use_soar:render("Spiritborn Soar", "Will attempt to use Spiritborn Soar as movement spell")
+                gui.elements.use_rushing_claw:render("Spiritborn Rushing Claw", "Will attempt to use Spiritborn Rushing Claw as movement spell")
+                gui.elements.use_leap:render("Barbarian Leap", "Will attempt to use Barbarian Leap as movement spell")
+                gui.elements.movement_tree:pop()
+            end
         end
         gui.elements.pit_settings_tree:pop()
     end
