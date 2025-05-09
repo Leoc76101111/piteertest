@@ -40,8 +40,10 @@ function task.shouldExecute()
             (status.sell_count > 0 or status.salvage_count > 0) or
             -- boss item
             #get_local_player():get_consumable_items() == 33 or
-            -- compass
-            #get_local_player():get_dungeon_key_items() == 33
+            -- compass/tributes
+            #get_local_player():get_dungeon_key_items() == 33 or
+            -- eq <= 10% durability
+            status.need_repair
         then
             return true
         elseif task.status == status_enum['WAITING'] or
