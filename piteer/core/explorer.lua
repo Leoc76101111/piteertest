@@ -757,6 +757,18 @@ local last_a_star_call = 0.0
 local path_recalculation_interval = 0.5 -- Recalculate path every 2 seconds
 local last_path_recalculation = 0.0
 
+local function is_enemies_nearby()
+    local player_pos = get_player_position()
+    local enemies = actors_manager.get_enemy_npcs()
+    local enemies_nearby = false
+    for _, enemy in ipairs(enemies) do
+        if calculate_distance(player_pos, enemy:get_position()) < 2 then
+            enemies_nearby = true
+        end
+    end
+    return enemies_nearby
+end
+
 -- Update the move_to_target function
 local function move_to_target()
     --console.print("Moving to target")
@@ -808,7 +820,7 @@ local function move_to_target()
         if current_path and current_path[path_index] then
             local next_point = current_path[path_index]
             if next_point and not next_point:is_zero() then
-                if settings.movement_spell_in_explorer then
+                if settings.movement_spell_in_explorer and not is_enemies_nearby() then
                     explorer:movement_spell_to_target(target_position)
                 end
                 local new_player_pos = get_player_position()
@@ -1145,6 +1157,7 @@ local function check_and_create_circle()
         console.print("Not enough distance or time has passed to create a new circle")
     end
 end
+
 
 -- This function should be called in your main update loop
 function explorer:update()
