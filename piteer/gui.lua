@@ -1,5 +1,5 @@
 local gui = {}
-local plugin_label = "Piteer V3.13"
+local plugin_label = "Piteer V3.14"
 
 local function create_checkbox(key)
     return checkbox:new(false, get_hash(plugin_label .. "_" .. key))

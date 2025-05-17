@@ -1,3 +1,7 @@
+**Version 3.14**
+  - updated alfred integration
+  - prep for deprecation of alfred's global variable PLUGIN_alfred_the_butler
+  - improved trigger logic to follow alfred's inventory limit and checks
 **Version 3.13**
   - added option to use movement spell while exploring pit
 

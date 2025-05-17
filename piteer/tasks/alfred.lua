@@ -21,7 +21,11 @@ local function floor_has_loot()
 end
 
 local function reset()
-    PLUGIN_alfred_the_butler.pause(plugin_label)
+    if AlfredTheButlerPlugin then
+        AlfredTheButlerPlugin.pause(plugin_label)
+    elseif PLUGIN_alfred_the_butler then
+        PLUGIN_alfred_the_butler.pause(plugin_label)
+    end
     -- add more stuff here if you need to do something after alfred is done
     if floor_has_loot() then
         loot_start = get_time_since_inject()
@@ -33,23 +37,29 @@ local function reset()
 end
 
 function task.shouldExecute()
-    if settings.use_alfred and PLUGIN_alfred_the_butler then
-        local status = PLUGIN_alfred_the_butler.get_status()
-        -- add additional conditions to trigger if required
-        if status.inventory_full and
-            (status.sell_count > 0 or status.salvage_count > 0) or
-            -- boss item
-            #get_local_player():get_consumable_items() == 33 or
-            -- compass/tributes
-            #get_local_player():get_dungeon_key_items() == 33 or
-            -- eq <= 10% durability
-            status.need_repair
-        then
-            return true
-        elseif task.status == status_enum['WAITING'] or
-            task.status == status_enum['LOOTING']
-        then
-            return true
+    if settings.use_alfred then
+        local status = {enabled = false}
+        if AlfredTheButlerPlugin then
+            status = AlfredTheButlerPlugin.get_status()
+            -- add additional conditions to trigger if required
+            if (status.enabled and status.need_trigger) or
+                task.status == status_enum['WAITING'] or
+                task.status == status_enum['LOOTING']
+            then
+                return true
+            end
+        elseif PLUGIN_alfred_the_butler then
+            status = PLUGIN_alfred_the_butler.get_status()
+            if status.enabled and (
+                status.inventory_full or
+                status.restock_count > 0 or
+                status.need_repair or
+                status.teleport or
+                task.status == status_enum['WAITING'] or
+                task.status == status_enum['LOOTING']
+            ) then
+                return true
+            end
         end
     end
     return false
@@ -58,16 +68,28 @@ end
 function task.Execute()
     if task.status == status_enum['IDLE'] then
         tracker:set_boss_task_running(true)
-        PLUGIN_alfred_the_butler.resume()
-        task.status = status_enum['WAITING']
-        if utils.player_in_zone("Scos_Cerrigar") then
-            PLUGIN_alfred_the_butler.trigger_tasks(plugin_label,reset)
-        elseif not floor_has_loot() or not settings.alfred_return then
-            PLUGIN_alfred_the_butler.trigger_tasks(plugin_label,reset)
-            teleport_to_waypoint(0x76D58)
-        else
-            PLUGIN_alfred_the_butler.trigger_tasks_with_teleport(plugin_label,reset)
+        if AlfredTheButlerPlugin then
+            AlfredTheButlerPlugin.resume()
+            if utils.player_in_zone("Scos_Cerrigar") then
+                AlfredTheButlerPlugin.trigger_tasks(plugin_label,reset)
+            elseif not floor_has_loot() or not settings.alfred_return then
+                AlfredTheButlerPlugin.trigger_tasks(plugin_label,reset)
+                teleport_to_waypoint(0x76D58)
+            else
+                AlfredTheButlerPlugin.trigger_tasks_with_teleport(plugin_label,reset)
+            end
+        elseif PLUGIN_alfred_the_butler then
+            PLUGIN_alfred_the_butler.resume()
+            if utils.player_in_zone("Scos_Cerrigar") then
+                PLUGIN_alfred_the_butler.trigger_tasks(plugin_label,reset)
+            elseif not floor_has_loot() or not settings.alfred_return then
+                PLUGIN_alfred_the_butler.trigger_tasks(plugin_label,reset)
+                teleport_to_waypoint(0x76D58)
+            else
+                PLUGIN_alfred_the_butler.trigger_tasks_with_teleport(plugin_label,reset)
+            end
         end
+        task.status = status_enum['WAITING']
     elseif task.status == status_enum['LOOTING'] and get_time_since_inject() > loot_start + loot_timeout then
         task.status = status_enum['IDLE']
         tracker:set_boss_task_running(false)
@@ -79,7 +101,9 @@ function task.Execute()
     end
 end
 
-if settings.enabled and settings.use_alfred and PLUGIN_alfred_the_butler then
+if settings.enabled and settings.use_alfred and
+    (AlfredTheButlerPlugin or PLUGIN_alfred_the_butler)
+then
     -- do an initial reset
     reset()
 end
