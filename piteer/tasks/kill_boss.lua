@@ -141,6 +141,9 @@ local task = {
         local boss = utils.get_closest_enemy()
         if not boss or not boss:is_boss() then 
             is_boss_task_active = false
+            tracker:set_boss_task_running(false)
+            explorer:clear_path_and_target()
+            explorer.enabled = true
             return false 
         end
 
@@ -183,10 +186,10 @@ local task = {
             current_point_index = (current_point_index % #rotation_points) + 1
         end
 
-        is_boss_task_active = false
-        tracker:set_boss_task_running(false)
-        explorer:clear_path_and_target()
-        explorer.enabled = true
+        -- is_boss_task_active = false
+        -- tracker:set_boss_task_running(false)
+        -- explorer:clear_path_and_target()
+        -- explorer.enabled = true
 
         --if not success then
         --    print("Error in Kill Boss task: " .. tostring(error))
