@@ -1,7 +1,13 @@
+**Version 3.15**
+  - updated boss searching logic
+  - updated gambling to be disabled when using alfred
+  - hardcoded obol cost to 100 (to avoid get_price() api crashing)
+
 **Version 3.14**
   - updated alfred integration
   - prep for deprecation of alfred's global variable PLUGIN_alfred_the_butler
   - improved trigger logic to follow alfred's inventory limit and checks
+
 **Version 3.13**
   - added option to use movement spell while exploring pit
 
