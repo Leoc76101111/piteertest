@@ -19,6 +19,7 @@ local is_running = false  -- State variable moved outside the task table
 local task = {
     name = "Obol Vendor",
     shouldExecute = function()
+        if settings.use_alfred and PLUGIN_alfred_the_butler then return false end
         if not settings.enabled or not settings.gamble_enabled then
             return false
         end
@@ -30,15 +31,17 @@ local task = {
         if not is_running then
             local should_start = utils.player_in_zone("Scos_Cerrigar") and obols > 1000
             console.print("Should start task: " .. tostring(should_start))
+            is_running = should_start
             return should_start
         else
             local should_continue = utils.player_in_zone("Scos_Cerrigar") and obols >= 100
             console.print("Should continue task: " .. tostring(should_continue))
+            is_running = should_continue
             return should_continue
         end
     end,
     Execute = function()
-        is_running = true
+        -- is_running = true
         console.print("Starting Execute function")
         
         local gambler = utils.get_gambler()
@@ -78,7 +81,8 @@ local task = {
                             local item = vendor_items:get(i)
                             if item then
                                 local display_name = item:get_display_name()
-                                local price = item:get_price()
+                                -- local price = item:get_price()
+                                local price = 100
                                 local skin_name = item:get_skin_name()
                                 local name = item:get_name()
                                 local sno_id = item:get_sno_id()
@@ -133,10 +137,10 @@ local task = {
             local player = get_local_player()
             local obols = player:get_obols()
             console.print("Current obols: " .. obols)
-            if obols < 100 then
-                console.print("Obols below 100, stopping task")
-                is_running = false
-            end
+            -- if obols < 100 then
+            --     console.print("Obols below 100, stopping task")
+            --     is_running = false
+            -- end
             
             return false
         end 

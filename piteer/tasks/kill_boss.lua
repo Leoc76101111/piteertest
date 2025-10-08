@@ -128,8 +128,8 @@ local task = {
         if not (utils.player_in_zone("EGD_MSWK_World_02") or utils.player_in_zone("EGD_MSWK_World_01")) then
             return false
         end
-
-        local close_enemy = utils.get_closest_enemy()
+        local boss_only = true
+        local close_enemy = utils.get_closest_enemy(boss_only)
         return close_enemy ~= nil and close_enemy:is_boss()
     end,
     Execute = function()
@@ -138,7 +138,8 @@ local task = {
         explorer:clear_path_and_target()
         explorer.enabled = false
 
-        local boss = utils.get_closest_enemy()
+        local boss_only = true
+        local boss = utils.get_closest_enemy(boss_only)
         if not boss or not boss:is_boss() then 
             is_boss_task_active = false
             tracker:set_boss_task_running(false)

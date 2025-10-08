@@ -61,8 +61,8 @@ function utils.player_in_zone(zname)
 end
 
 ---@return game.object|nil
-function utils.get_closest_enemy()
-    local elite_only = settings.elites_only
+function utils.get_closest_enemy(elite_only_override)
+    local elite_only = elite_only_override or settings.elites_only
     local player_pos = get_player_position()
     local enemies = target_selector.get_near_target_list(player_pos, 90)
     local closest_elite, closest_normal

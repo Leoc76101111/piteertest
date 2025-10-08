@@ -14,7 +14,7 @@ local task = {
             return false
         end
 
-        local close_enemy = utils.get_closest_enemy()
+        local close_enemy = utils.get_closest_enemy(false)
         return close_enemy ~= nil
     end,
     Execute = function()
@@ -36,7 +36,7 @@ local task = {
         end
 
         local distance_check = settings.melee_logic and 2 or 6.5
-        local enemy = utils.get_closest_enemy()
+        local enemy = utils.get_closest_enemy(false)
         if not enemy then return false end
 
         local within_distance = utils.distance_to(enemy) < distance_check
