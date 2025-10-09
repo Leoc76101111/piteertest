@@ -7,7 +7,7 @@ local gui = require "gui"
 local task = {
     name = "Town Sell",
     shouldExecute = function()
-        if settings.use_alfred and PLUGIN_alfred_the_butler then return false end
+        if settings.use_alfred and AlfredTheButlerPlugin then return false end
         return utils.player_in_zone("Scos_Cerrigar") 
         and get_local_player():get_item_count() >= 25
         and settings.loot_modes == gui.loot_modes_enum.SELL  -- Correct reference to the current loot mode setting

@@ -8,7 +8,7 @@ local tracker = require "core.tracker"
 local task = {
     name = "Town Repair",
     shouldExecute = function()
-        if settings.use_alfred and PLUGIN_alfred_the_butler then return false end
+        if settings.use_alfred and AlfredTheButlerPlugin then return false end
         return utils.player_in_zone("Scos_Cerrigar") 
             and auto_play.get_objective() == objective.repair
     end,

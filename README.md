@@ -1,3 +1,6 @@
+**Version 3.16**
+  - reverted disabling gambnle
+
 **Version 3.15**
   - updated boss searching logic
   - updated gambling to be disabled when using alfred

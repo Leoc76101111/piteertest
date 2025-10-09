@@ -1,5 +1,5 @@
 local gui = {}
-local plugin_label = "Piteer V3.15"
+local plugin_label = "Piteer V3.16"
 
 local function create_checkbox(key)
     return checkbox:new(false, get_hash(plugin_label .. "_" .. key))
@@ -164,11 +164,12 @@ function gui.render()
         if not PLUGIN_alfred_the_butler or not gui.elements.use_alfred:get() then
             gui.elements.loot_modes:render("Loot Modes", gui.loot_modes_options, "Nothing and Stash will get you stuck for now")
             gui.elements.greater_affix_slider:render("Greater Affix Threshold", "Set the number of greater affixes to salvage (0-3)")
-            gui.elements.gamble_toggle:render("Enable Gambling", "Toggle gambling on/off")
-            gui.elements.gamble_category[class]:render("Gamble Category", gui.gamble_categories[class], "Select the item category to gamble")
         else
             gui.elements.alfred_return:render("Return for loot", "return to pit to collect floor loot")
         end
+        gui.elements.gamble_toggle:render("Enable Gambling", "Toggle gambling on/off")
+        gui.elements.gamble_category[class]:render("Gamble Category", gui.gamble_categories[class], "Select the item category to gamble")
+        
         gui.elements.pit_settings_tree:pop()
     end
 

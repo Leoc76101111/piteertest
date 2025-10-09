@@ -70,7 +70,7 @@ function town_stash.stash_items()
 end
 
 function town_stash.shouldExecute()
-    if settings.use_alfred and PLUGIN_alfred_the_butler then return false end
+    if settings.use_alfred and AlfredTheButlerPlugin then return false end
     return utils.player_in_zone("Scos_Cerrigar") 
         and town_stash.check_inventory_has_items()
         and settings.loot_modes == gui.loot_modes_enum.STASH
