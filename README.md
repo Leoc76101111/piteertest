@@ -1,3 +1,8 @@
+**Version 3.17**
+  - added paladin gambling
+  - added belial eye interact (this is counted as shrine)
+  - added belial portal
+
 **Version 3.16**
   - reverted disabling gambnle
 
