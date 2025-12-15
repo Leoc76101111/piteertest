@@ -23,6 +23,7 @@ local settings = {
     cheat_death = false,
     escape_percentage = 40,
     interact_shrine = true,
+    melee_logic = true,
 }
 
 function settings:update_settings()

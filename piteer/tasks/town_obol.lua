@@ -19,7 +19,6 @@ local is_running = false  -- State variable moved outside the task table
 local task = {
     name = "Obol Vendor",
     shouldExecute = function()
-        -- if settings.use_alfred and AlfredTheButlerPlugin then return false end
         if not settings.enabled or not settings.gamble_enabled then
             return false
         end

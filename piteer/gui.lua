@@ -1,5 +1,5 @@
 local gui = {}
-local plugin_label = "Piteer V3.16"
+local plugin_label = "Piteer V3.17"
 
 local function create_checkbox(key)
     return checkbox:new(false, get_hash(plugin_label .. "_" .. key))
@@ -18,7 +18,9 @@ function gui.get_character_class()
         [3] = 'rogue',
         [5] = 'druid',
         [6] = 'necromancer',
-        [7] = 'spiritborn'
+        [7] = 'spiritborn',
+        [8] = 'default', -- new class in expansion, dont know name yet
+        [9] = 'paladin'
     }
     if character_classes[class_id] then
         return character_classes[class_id]
@@ -54,6 +56,7 @@ gui.gamble_categories = {
     ['druid'] = {"Cap", "Whispering Key", "Tunic", "Gloves", "Boots", "Pants", "Amulet", "Ring", "Axe", "Sword", "Mace", "Two-Handed Axe", "Two-Handed Mace", "Polearm", "Dagger", "Staff", "Totem"},
     ['necromancer'] = {"Cap", "Whispering Key", "Tunic", "Gloves", "Boots", "Pants", "Amulet", "Ring", "Axe", "Sword", "Mace", "Two-Handed Axe", "Two-Handed Sword", "Scythe", "Two-Handed Mace", "Two-Handed Scythe", "Dagger", "Shield", "Wand", "Focus"},
     ['spiritborn'] = {"Quarterstaff", "Cap", "Whispering Key", "Tunic", "Gloves", "Boots", "Pants", "Amulet", "Ring", "Polearm", "Glaive"},
+    ['paladin'] = {"Cap", "Whispering Key", "Tunic", "Gloves", "Boots", "Pants", "Amulet", "Ring", "Axe", "Sword", "Mace", "Shield", "Flail", "Two-Handed Axe", "Two-Handed Sword", "Two-Handed Mace", },
     ['default'] = {"CLASS NOT LOADED"}
 }
 
@@ -79,6 +82,7 @@ gui.elements = {
         ['druid'] = combo_box:new(0, get_hash("piteer_gamble_druid_category")),
         ['necromancer'] = combo_box:new(0, get_hash("piteer_gamble_necromancer_category")),
         ['spiritborn'] = combo_box:new(0, get_hash("piteer_gamble_spiritborn_category")),
+        ['paladin'] = combo_box:new(0, get_hash("piteer_gamble_paladin_category")),
         ['default'] = combo_box:new(0, get_hash("piteer_gamble_default_category")),
     },
     greater_affix_slider = slider_int:new(0, 3, 1, get_hash("greater_affix_slider")),
@@ -169,7 +173,6 @@ function gui.render()
         end
         gui.elements.gamble_toggle:render("Enable Gambling", "Toggle gambling on/off")
         gui.elements.gamble_category[class]:render("Gamble Category", gui.gamble_categories[class], "Select the item category to gamble")
-        
         gui.elements.pit_settings_tree:pop()
     end
 

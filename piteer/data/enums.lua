@@ -6,7 +6,8 @@ local enums = {
     portal_names = {
         guardians_lair = "EGD_MSWK_World_PortalToFinalEncounter",
         demise = "EGD_MSWK_World_PortalTileSetTravel",
-        pit_portal = "EGD_MSWK_World_Portal_01"
+        pit_portal = "EGD_MSWK_World_Portal_01",
+        belial_portal = "S11_EGD_MSWK_World_BelialPortalToFinalEncounter"
     },
     misc = {
         obelisk = "TWN_Kehj_IronWolves_PitKey_Crafter",
@@ -37,7 +38,8 @@ local enums = {
         GOLD = "Shrine_DRLG_Gold",
         ARTILLERY = "Shrine_DRLG_Artillery",
         CHANNELING = "Shrine_DRLG_Channeling",
-        WITCHPOWER = "S07_Witch_Bonus_Shrine"
+        WITCHPOWER = "S07_Witch_Bonus_Shrine",
+        BELIALEYE = "S11_Pit_BetrayersEyeSwitch"
     }
 }
 
