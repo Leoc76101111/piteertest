@@ -136,7 +136,7 @@ function gui.render()
             gui.elements.minimum_glyph_level:render("Minimum level", "Only upgrade glyphs with level greater than or equal to this value")
             gui.elements.maximum_glyph_level:render("Maximum level", "Only upgrade glyphs with level less than or equal to this value")
         end
-        gui.elements.interact_shrine:render("Enable shrine interaction (and witch power)", "Enable shrine interaction (and witch power S07)")
+        gui.elements.interact_shrine:render("Enable shrine interaction (and belial eye)", "Enable shrine interaction (and belial eye)")
         gui.elements.cheat_death:render("Enable Hardcore cheat death", "Enable Hardcore cheat death")
         if gui.elements.cheat_death:get() then
             gui.elements.escape_percentage:render("Health %%", "%% health to immediately leave pit")

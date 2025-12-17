@@ -1,5 +1,6 @@
 **Version 3.18**
   - added integration with Magoogles d4 assistance suite for messaging to alts
+  - updated gui to say belial eye and removed witch power
 
 **Version 3.17**
   - added paladin gambling

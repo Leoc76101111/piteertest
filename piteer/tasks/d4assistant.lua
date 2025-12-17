@@ -36,7 +36,6 @@ function task.shouldExecute()
         local timestamp = tonumber(data)
         io.close(file)
         if type(timestamp) ~= "number" or timestamp + 60 < tonumber(os.time(os.date('!*t'))) then
-            console.print(timestamp)
             return true
         end
     end
