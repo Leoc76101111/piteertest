@@ -59,6 +59,7 @@ local task_files = {
     "stupid_ladder",
     "kill_boss",
     "kill_monsters",
+    "d4assistant",
     "upgrade_glyph",
     "alfred",
     "finish_pit",  -- Move finish_pit earlier in the list

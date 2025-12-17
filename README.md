@@ -1,3 +1,6 @@
+**Version 3.18**
+  - added integration with Magoogles d4 assistance suite for messaging to alts
+
 **Version 3.17**
   - added paladin gambling
   - added belial eye interact (this is counted as shrine)
